@@ -97,7 +97,7 @@
 	  <input class="red" placeholder="e.g. 'Jan Bosch'" type="text"></input>
 	</fieldset>
 	
-	<fieldset class="article e-article newspaper-article">
+	<fieldset class="article e-publication newspaper-article">
 	  <legend>Publication date:</legend>
 	  <input class="pubdate" type="date"></input>
 	</fieldset>
@@ -107,7 +107,7 @@
 	  <input class="date" type="date"></input>
 	</fieldset>
 	
-	<fieldset class="book chapter article e-article paper">
+	<fieldset class="book e-article chapter article paper">
 	  <legend>Year:</legend>
 	  <input class="year" placeholder="e.g. '2015'" type="number" min="1950"></input>
 	</fieldset>
@@ -560,7 +560,7 @@
 	  <input class="red" placeholder="bv. 'Jan Bosch'" type="text"></input>
 	</fieldset>
 	
-	<fieldset class="article e-article newspaper-article">
+	<fieldset class="article e-publication newspaper-article">
 	  <legend>Publicatiedatum:</legend>
 	  <input class="pubdate" type="date"></input>
 	</fieldset>
@@ -570,7 +570,7 @@
 	  <input class="date" type="date"></input>
 	</fieldset>
 	
-	<fieldset class="book chapter article e-article paper">
+	<fieldset class="book e-article chapter article paper">
 	  <legend>Jaar:</legend>
 	  <input class="year" placeholder="bv. '2015'" type="number" min="1950"></input>
 	</fieldset>
@@ -2369,15 +2369,15 @@ if (typeof module !== "undefined" && module.exports) {
  	  if (src.author != null && src.author != undefined) {
 	    res += '<p>' + name(src.author, style) + ' ';
   	  }
- 	  if (src.year != null && src.year != undefined) {
-	    res += '(' + src.year.toString();
+ 	  if (check2(src.pubdate.from[2])) {
+	    res += '(' + src.pubdate.from[2].toString();
   	  }
   	  if (check2(src.pubdate.from[0])||check2(src.pubdate.to[0])) {
 	    src.pubdate.from[2] = '';
 	    res +=  '/' + date(src.pubdate,lan);
   	  }
   	  res += ')'
-  	  if ((src.year != null && src.year != undefined)||((src.year != null && src.year != undefined)&&(src.author != null && src.author != undefined))) { res+='. '}
+  	  if ((src.pubdate.from != null && src.pubdate.from != undefined)||((src.pubdate.from != null && src.pubdate.from != undefined)&&(src.author != null && src.author != undefined))) { res+='. '}
  	  if (src.title != null && src.title != undefined) {
 	    res += '<span class="i">' + src.title + '</span>';
   	  }
