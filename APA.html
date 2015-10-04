@@ -2373,8 +2373,10 @@ if (typeof module !== "undefined" && module.exports) {
 	    res += '(' + src.pubdate.from[2].toString();
   	  }
   	  if (check2(src.pubdate.from[0])||check2(src.pubdate.to[0])) {
-	    src.pubdate.from[2] = '';
+	    var datum = src.pubdate.from[2]
+	    src.pubdate.from[2]= '';
 	    res +=  '/' + date(src.pubdate,lan);
+	    src.pubdate.from[2]= datum;
   	  }
   	  res += ')'
   	  if ((src.pubdate.from != null && src.pubdate.from != undefined)||((src.pubdate.from != null && src.pubdate.from != undefined)&&(src.author != null && src.author != undefined))) { res+='. '}
@@ -2638,7 +2640,6 @@ if (typeof module !== "undefined" && module.exports) {
       
       $('textarea.JSON').change(function(){
 	draftsrc = strToObj($(this).val());
-	console.log(draftsrc)
 	start(draftsrc,formatstyle,lan,draftholder);
       });
       
@@ -2661,8 +2662,8 @@ if (typeof module !== "undefined" && module.exports) {
       
       $('button:contains("Kopi"),button:contains("Copy")').click(function(){
 	var txt = $(".container:not(.invisible) .citation").get(0).textContent;
-// 	CopyToClipboard(txt,false);
-	CopyToClipBoard($(".container:not(.invisible) .citation"));
+	CopyToClipboard(txt,false);
+//	CopyToClipBoard($(".container:not(.invisible) .citation"));
       });
       
       $('button:contains("Downloaden"),button:contains("Download")').click(function(){
