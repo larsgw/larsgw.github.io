@@ -433,7 +433,7 @@
 	<fieldset>
 	<select class="format">
 	  <option value="APA">APA</option>
-<!-- 	  <option value="Vancouver">Vancouver</option> -->
+	  <option value="Vancouver">Vancouver</option>
 	  <option value="JSON">JSON</option>
 	  <option value="BibTeX">BibTeX</option>
 	</select>
@@ -898,7 +898,7 @@
 	<select class="format">
 	  <option value="EckartAPA">Eckartcolleges versie van APA</option>
 	  <option value="APA">APA</option>
-<!-- 	  <option value="Vancouver">Vancouver</option> -->
+	  <option value="Vancouver">Vancouver</option>
 	  <option value="JSON">JSON</option>
 	  <option value="BibTeX">BibTeX</option>
 	</select>
@@ -1623,6 +1623,18 @@ if (typeof module !== "undefined" && module.exports) {
       {
 	nl:'druk',
 	en:'print'
+      },
+      {
+	nl:'editie',
+	en:'edition'
+      },
+      {
+	nl:'Internet',
+	en:'Internet'
+      },      
+      {
+	nl:'Beschikbaar op',
+	en:'Available from'
       }
       ];
       
@@ -1731,7 +1743,7 @@ if (typeof module !== "undefined" && module.exports) {
 	  var b = '';
 	  for (i=0;i<str.length;++i) {				// Loops trough every full name
 	    if (str.indexOf(',')>0) {b+=str}else{		// Checks if name isn't already formatted (and appends name to res if it is)
-	    var a = str[i].split(' ');				// Splits each full name into names (e.g. 'Jan', 'van', etc.)
+	    var a = str[i].replace(/-/g,' ').split(' ');	// Splits each full name into names (e.g. 'Jan', 'van', etc.)
 	    b+=a[(a.length-1)] + ',';	 			// Adds last name to b
 	    for (j=0;j<(a.length-1);++j) {			// Loops trough every name
 	      if (a[j][0] === a[j][0].toUpperCase()) {		// Checks if first letter is capital
@@ -1754,7 +1766,7 @@ if (typeof module !== "undefined" && module.exports) {
 	    if (str.indexOf(',')>0) {res+=str}			// Checks if name isn't already formatted (and appends name to res if it is)
 	    else{
 	    var b = '';
-	    var a = str.split(' ');       			// Splits each full name into names (e.g. 'Jan', 'van', etc.)
+	    var a = str.replace(/-/g,' ').split(' ');		// Splits each full name into names (e.g. 'Jan', 'van', etc.)
 	    b+=a[(a.length-1)] + ',';				// Adds last name to b
 	    for (j=0;j<(a.length-1);++j) {  			// Loops trough every name
 	      if (a[j][0] === a[j][0].toUpperCase()) {		// Checks if first letter is capital
@@ -1776,7 +1788,7 @@ if (typeof module !== "undefined" && module.exports) {
 	    else{
 	    var f = '';						// Sets f to empty string
 	    var l = '';						// Sets l to empty string
-	    var a = str[i].split(' ');				// Splits each full name into names (e.g. 'Jan', 'van', etc.)
+	    var a = str[i].replace(/-/g,' ').split(' ');	// Splits each full name into names (e.g. 'Jan', 'van', etc.)
 	    for (j=0;j<(a.length-1);++j) {			// Loops trough every name
 	      if (a[j][0] === a[j][0].toUpperCase()) {		// Checks if first letter is capital
 		f+=a[j][0];					// Appends initials to b
@@ -1787,8 +1799,8 @@ if (typeof module !== "undefined" && module.exports) {
 	    };
 	    l+=a[(a.length-1)]					// Appends last name to l (last name)
 	    }
-	    b+=l+' '+f;
-	    if (i<a.length-1){					// Checks if not last name
+	    b+=l+' '+f;						// Appends l (last name) and f (first name) to b (formatted name)
+	    if (i<str.length-1){				// Checks if not last name
 	      b += ', '						// Appends ', ' between names
 	    }
 	  };
@@ -1800,7 +1812,7 @@ if (typeof module !== "undefined" && module.exports) {
 	    var b = '';
 	    var f = '';						// Sets f to empty string
 	    var l = '';						// Sets l to empty string
-	    var a = str.split(' ');				// Splits each full name into names (e.g. 'Jan', 'van', etc.)
+	    var a = str.replace(/-/g,' ').split(' ');		// Splits each full name into names (e.g. 'Jan', 'van', etc.)
 	    for (j=0;j<(a.length-1);++j) {			// Loops trough every name
 	      if (a[j][0] === a[j][0].toUpperCase()) {		// Checks if first letter is capital
 		f+=a[j][0];					// Appends initials to b
@@ -1949,6 +1961,44 @@ if (typeof module !== "undefined" && module.exports) {
 	return res;
       }
       
+      // Basic function: Last digit
+      
+      function lastDigit(num) {
+	return parseInt(num.toString()[num.toString().length-1])
+      }
+      
+      // Number to rank
+      
+      function numToRank(num,lan) {
+	var res = num.toString();
+	var rank = [];
+	if (lan =='nl') {
+	  rank = ['ste','de','de','de']
+	  if (num<3&&num!=0) {
+	    res+=rank[num-1]
+	  }
+	  else if (num<19) {
+	    res+=rank[3]
+	  }
+	  else if (num=>20){
+	    res+=rank[0]
+	  }
+	}
+	else if (lan == 'en'||lan =='bx') {
+	  rank = ['st','nd','rd','th']
+	  if (lastDigit(num) > 3) {
+	    res += rank[3]
+	  }
+	  else if ((lastDigit(num)<=3&&lastDigit(num)!=0)&&(num<10||num>19)) {
+	    res += rank[lastDigit(num)-1]
+	  }
+	  else {
+	    res += rank[3]
+	  }
+	}
+	return res;
+      }
+      
       // Buttons
      
       function clear() {
@@ -1987,7 +2037,7 @@ if (typeof module !== "undefined" && module.exports) {
 	},
 	{
 	  type: 'boek',
-	  author: ['Jan van den Bomen', 'Jan Bosch'],
+	  author: ['Jan van den Bomen', 'Henk-Jan Bosch'],
 	  red: 'Jan van der Linden',
 	  year: 2001,
 	  title: 'Titel',
@@ -2075,15 +2125,9 @@ if (typeof module !== "undefined" && module.exports) {
       
       function shuffleArr(array) {
 	var currentIndex = array.length, temporaryValue, randomIndex ;
-
-	  // While there remain elements to shuffle...
 	  while (0 !== currentIndex) {
-
-	  // Pick a remaining element...
 	  randomIndex = Math.floor(Math.random() * currentIndex);
 	  currentIndex -= 1;
-	
-	  // And swap it with the current element.
 	  temporaryValue = array[currentIndex];
 	  array[currentIndex] = array[randomIndex];
 	  array[randomIndex] = temporaryValue;
@@ -2221,6 +2265,7 @@ if (typeof module !== "undefined" && module.exports) {
 	var res = /*src.type.replace(src.type[0], src.type[0].toUpperCase()) + ': '*/ '' ;
 	// APA-style bibliography in HTML
 	if (style == 'APA' || style == 'EckartAPA') {
+	res += '<p>'
 	var word = [];
 	for (t=0;t<words.length;++t) {
 	  word[t] = words[t][lan]
@@ -2228,13 +2273,13 @@ if (typeof module !== "undefined" && module.exports) {
  	// The book formatter
    	if (src.type.toLowerCase() == 'boek' || src.type.toLowerCase() == 'book') {
  	  if ((src.author != null && src.author != undefined)&&(src.red == null || src.red == undefined)) {
-	    res += '<p>' + name(src.author, style) + ' ';
+	    res += name(src.author, style) + ' ';
   	  }
   	  else if ((src.author!=null&&src.author!=undefined)&&(src.red!=null&&src.red!=undefined)) {
-  	    res += '<p>' + compiler(src, style) + ' (red.) ';
+  	    res += compiler(src, style) + ' (red.) ';
   	  }
  	  else if ((src.red!=null&&src.red!=undefined)&&(src.author==null||src.author==undefined)) {
-	    res += '<p>' + name(src.red, style) + ' (red.) ';
+	    res += name(src.red, style) + ' (red.) ';
   	  }
  	  if (src.year != null && src.year != undefined) {
 	    res += '(' + src.year.toString() + ')';
@@ -2258,19 +2303,19 @@ if (typeof module !== "undefined" && module.exports) {
 	    res +=  ':';
   	  }
  	  if (src.publisher != null && src.publisher != undefined) {
-	    res += ' ' + src.publisher + '.</p>';
+	    res += ' ' + src.publisher + '.';
   	  }
    	}
  	// The chapter formatter
    	else if (src.type.toLowerCase() == 'hoofdstuk' || src.type.toLowerCase() == 'chapter') {
  	  if ((src.chapterauthor != null && src.chapterauthor != undefined)&&(src.chapterred == null || src.chapterred == undefined)) {
-	    res += '<p>' + name(src.chapterauthor, style) + ' ';
+	    res += name(src.chapterauthor, style) + ' ';
   	  }
   	  else if ((src.chapterauthor!=null&&src.chapterauthor!=undefined)&&(src.chapterred!=null&&src.chapterred!=undefined)) {
-  	    res += '<p> ' + compiler(src, style) + ' (red.) ';
+  	    res += ' ' + compiler(src, style) + ' (red.) ';
   	  }
  	  else if ((src.red!=null&&src.red!=undefined)&&(src.author==null||src.author==undefined)) {
-	    res += '<p> ' + name(src.chapterred, style) + ' (red.) ';
+	    res += ' ' + name(src.chapterred, style) + ' (red.) ';
   	  }
  	  if (src.year != null && src.year != undefined) {
 	    res += '(' + src.year.toString() + ')';
@@ -2305,13 +2350,13 @@ if (typeof module !== "undefined" && module.exports) {
 	    res +=  ': ';
   	  }
  	  if (src.publisher != null && src.publisher != undefined) {
-	    res += src.publisher + '.</p>';
+	    res += src.publisher + '.';
   	  }
    	}
    	// The article formatter
    	else if (src.type.toLowerCase() == 'artikel' || src.type.toLowerCase() == 'article') {
  	  if (src.author != null && src.author != undefined) {
-	    res += '<p>' + name(src.author, style) + ' ';
+	    res += name(src.author, style) + ' ';
   	  }
  	  if (src.year != null && src.year != undefined) {
 	    res += '(' + src.year.toString() + ')';
@@ -2330,13 +2375,13 @@ if (typeof module !== "undefined" && module.exports) {
 	    res += '(' + src.number + ')';
   	  }
  	  if (src.pages != null && src.pages != undefined) {
-	    res += ', ' + src.pages[0].toString() + '-' + src.pages[1].toString() + '.</p>';
+	    res += ', ' + src.pages[0].toString() + '-' + src.pages[1].toString() + '.';
   	  }
    	}
    	// The e-article formatter
    	else if (src.type.toLowerCase() == 'e-artikel' || src.type.toLowerCase() == 'e-article') {
  	  if (src.author != null && src.author != undefined) {
-	    res += '<p>' + name(src.author, style) + ' ';
+	    res += name(src.author, style) + ' ';
   	  }
  	  if (src.year != null && src.year != undefined) {
 	    res += '(' + src.year.toString() + ')';
@@ -2361,13 +2406,13 @@ if (typeof module !== "undefined" && module.exports) {
 	    res += '. ' + word[0] + ' ' + date(src.date,lan);
   	  }
  	  if (src.url != null && src.url != undefined) {
-	    res += ', ' + word[1] + ' <a class="link" href="https://' + src.url.replace('https://','').replace('http://','') + '" >' + src.url + '</a></p>';
+	    res += ', ' + word[1] + ' <a class="link" href="https://' + src.url.replace('https://','').replace('http://','') + '" >' + src.url + '</a>';
   	  }
    	}
    	// The e-publication formatter
    	else if (src.type.toLowerCase() == 'e-publicatie' || src.type.toLowerCase() == 'e-publication') {
  	  if (src.author != null && src.author != undefined) {
-	    res += '<p>' + name(src.author, style) + ' ';
+	    res += name(src.author, style) + ' ';
   	  }
  	  if (check2(src.pubdate.from[2])) {
 	    res += '(' + src.pubdate.from[2].toString();
@@ -2387,13 +2432,13 @@ if (typeof module !== "undefined" && module.exports) {
 	    res += '. ' + word[0] + ' ' + date(src.date,lan);
   	  }
  	  if (src.url != null && src.url != undefined) {
-	    res += ', ' + word[1] + ' <a class="link" href="https://' + src.url.replace('https://','').replace('http://','') + '" >' + src.url + '</a></p>';
+	    res += ', ' + word[1] + ' <a class="link" href="https://' + src.url.replace('https://','').replace('http://','') + '" >' + src.url + '</a>';
   	  }
    	}
    	// The conference paper formatter
    	else if (src.type.toLowerCase() == 'paper' || src.type.toLowerCase() == 'paper') {
  	  if (src.author != null && src.author != undefined) {
-	    res += '<p>' + name(src.author, style) + ' ';
+	    res += name(src.author, style) + ' ';
   	  }
   	  if (src.year!=null&&src.year!=undefined) {
 	    res +=  '(' + src.year.toString() + ')';
@@ -2425,13 +2470,13 @@ if (typeof module !== "undefined" && module.exports) {
   	  }
   	  }
  	  if (src.date != null && src.date != undefined) {
-	    res += ', ' + date(src.date,lan) + '.</p>';
+	    res += ', ' + date(src.date,lan) + '.';
   	  }
    	}
    	// The newspaper formatter
    	else if (src.type.toLowerCase() == 'krantenartikel' || src.type.toLowerCase() == 'newspaper-article') {
  	  if (src.author != null && src.author != undefined) {
-	    res += '<p>' + name(src.author, style);
+	    res += name(src.author, style);
   	  }
   	  if (check2(src.pubdate.from[1])) {
 	    res +=  ' (' + date(src.pubdate,lan) + ')';
@@ -2444,35 +2489,36 @@ if (typeof module !== "undefined" && module.exports) {
 	    res += '<span class="i">' + src.journal + '</span>';
   	  }
  	  if (src.pages != null && src.pages != undefined) {
-	    res += ', p.' + src.pages[0].toString() + '.</p>';
+	    res += ', p.' + src.pages[0].toString() + '.';
   	  }
    	}
+   	res += '</p>'
    	}
    	
    	// Vanoucer-style bibliography in HTML
-   	/*else if (style == 'Vancouver') {
+   	/**/else if (style == 'Vancouver') {
+   	res += '<p>'
 	var word = [];
 	for (t=0;t<words.length;++t) {
 	  word[t] = words[t][lan]
 	}
+	
+ 	if (src.type.toLowerCase() == 'boek' || src.type.toLowerCase() == 'book') {
  	  if ((src.author != null && src.author != undefined)&&(src.red == null || src.red == undefined)) {
-	    res += '<p>' + name(src.author, style);
+	    res += name(src.author, style);
   	  }
   	  else if ((src.author!=null&&src.author!=undefined)&&(src.red!=null&&src.red!=undefined)) {
-  	    res += '<p>' + compiler(src, style) + 'editors';
+  	    res += compiler(src, style) + ', editors';
   	  }
  	  else if ((src.red!=null&&src.red!=undefined)&&(src.author==null||src.author==undefined)) {
-	    res += '<p>' + name(src.red, style) + 'editors';
+	    res += name(src.red, style) + ', editors';
   	  }
   	  if ((src.author != null && src.author != undefined)||(src.red != null && src.red != undefined)) { res+='. '}
- 	  if (src.year != null && src.year != undefined) {
-	    res += '(' + src.year.toString() + ')';
-  	  }
  	  if (src.title != null && src.title != undefined) {
-	    res += '<span class="i">' + src.title + '</span>.';
+	    res += src.title + '. ';
   	  }
  	  if (src.print != null && src.print != undefined) {
-	    res += ' (' + src.print + '<sup>e</sup> '+word[5]+') ';
+	    res += numToRank(src.print,lan)+' '+word[6][0]+word[6][1]+'. ';
   	  }
  	  if (src.place != null && src.place != undefined) {
 	    res += ' ';
@@ -2486,9 +2532,119 @@ if (typeof module !== "undefined" && module.exports) {
 	    res +=  ':';
   	  }
  	  if (src.publisher != null && src.publisher != undefined) {
-	    res += ' ' + src.publisher + '.</p>';
+	    res += ' ' + src.publisher;
   	  }
-   	}*/
+ 	  if (src.year != null && src.year != undefined) {
+	    res += '; ' + src.year.toString() + '.';
+  	  }
+   	}
+	else if (src.type.toLowerCase() == 'hoofdstuk' || src.type.toLowerCase() == 'chapter') {
+	  if (src.chapterauthor != null && src.chapterauthor != undefined) {
+	    res += name(src.chapterauthor, style) + '. ';
+	  }
+ 	  if (src.chapter != null && src.chapter != undefined) {
+	    res += src.chapter + '. In: ';
+  	  }
+	  if ((src.author != null && src.author != undefined)&&(src.red == null || src.red == undefined)) {
+	    res += name(src.author, style);
+	  }
+	  else if ((src.author!=null&&src.author!=undefined)&&(src.red!=null&&src.red!=undefined)) {
+	    res += compiler(src, style) + ', editors';
+	  }
+	  else if ((src.red!=null&&src.red!=undefined)&&(src.author==null||src.author==undefined)) {
+	    res += name(src.red, style) + ', editors';
+	  }
+	  if ((src.author != null && src.author != undefined)||(src.red != null && src.red != undefined)) { res+='. '}
+	  if (src.title != null && src.title != undefined) {
+	    res += src.title + '. ';
+	  }
+	  if (src.print != null && src.print != undefined) {
+	    res += numToRank(src.print,lan)+' '+word[6][0]+word[6][1]+'. ';
+	  }
+	  if (src.place != null && src.place != undefined) {
+	    res += ' ';
+	    if (Array.isArray(src.place)) {
+	      for (n=0;n<(src.place.length-1);++n){
+		res += src.place[n] + '/';
+	      };
+	      res += src.place[(src.place.length-1)];
+	    }
+	    else { res += src.place; }
+	    res +=  ':';
+	  }
+	  if (src.publisher != null && src.publisher != undefined) {
+	    res += ' ' + src.publisher;
+	  }
+	  if (src.year != null && src.year != undefined) {
+	    res += '; ' + src.year.toString() + '.';
+	  }
+	}
+	else if (src.type.toLowerCase() == 'krantenartikel' || src.type.toLowerCase() == 'newspaper-article'||src.type.toLowerCase()=='article'||src.type.toLowerCase()=='artikel') {
+	  if ((src.author != null && src.author != undefined)&&(src.red == null || src.red == undefined)) {
+	    res += name(src.author, style);
+	  }
+	  else if ((src.author!=null&&src.author!=undefined)&&(src.red!=null&&src.red!=undefined)) {
+	    res += compiler(src, style) + ', editors';
+	  }
+	  else if ((src.red!=null&&src.red!=undefined)&&(src.author==null||src.author==undefined)) {
+	    res += name(src.red, style) + ', editors';
+	  }
+	  if ((src.author != null && src.author != undefined)||(src.red != null && src.red != undefined)) { res+='. '}
+	  if (src.title != null && src.title != undefined) {
+	    res += src.title + '. ';
+	  }
+	  if (src.journal != null && src.journal != undefined) {
+	    res += src.journal;
+  	  }
+	  if (src.year != null && src.year != undefined) {
+	    res += '. ' + src.year.toString() + ';';
+	  }
+ 	  if (src.volume != null && src.volume != undefined) {
+	    res += src.volume;
+  	  }
+ 	  if (src.number != null && src.number != undefined) {
+	    res += '(' + src.number + ')';
+  	  }
+ 	  if (src.pages != null && src.pages != undefined) {
+	    res += ':' + src.pages[0].toString() + '-' + src.pages[1].toString() + '.';
+  	  }
+	}
+	else if (src.type.toLowerCase()=='e-article'||src.type.toLowerCase()=='e-artikel'||src.type.toLowerCase()=='e-publicatie'||src.type.toLowerCase()=='e-publication') {
+	  if ((src.author != null && src.author != undefined)&&(src.red == null || src.red == undefined)) {
+	    res += name(src.author, style);
+	  }
+	  else if ((src.author!=null&&src.author!=undefined)&&(src.red!=null&&src.red!=undefined)) {
+	    res += compiler(src, style) + ', editors';
+	  }
+	  else if ((src.red!=null&&src.red!=undefined)&&(src.author==null||src.author==undefined)) {
+	    res += name(src.red, style) + ', editors';
+	  }
+	  if ((src.author != null && src.author != undefined)||(src.red != null && src.red != undefined)) { res+='. '}
+	  if (src.title != null && src.title != undefined) {
+	    res += src.title + '. ';
+	  }
+	  if (src.journal != null && src.journal != undefined) {
+	    res += src.journal + '['+word[6]+']';
+  	  }
+	  if (src.year != null && src.year != undefined) {
+	    res += '. ' + src.year.toString() + ';';
+	  }
+ 	  if (src.volume != null && src.volume != undefined) {
+	    res += src.volume;
+  	  }
+ 	  if (src.number != null && src.number != undefined) {
+	    res += '(' + src.number + ')';
+  	  }
+ 	  if (src.pages != null && src.pages != undefined) {
+	    res += ':' + src.pages[0].toString() + '-' + src.pages[1].toString() + '.';
+  	  }
+ 	  if (src.url != null && src.url != undefined) {
+	    res += ' ' + word[7] + ': <a class="link" href="https://' + src.url.replace('https://','').replace('http://','') + '" >' + src.url + '</a>';
+  	  }
+	}
+	res += '</p>'
+	}/**/
+	
 	// BibTeX bibliography in HTML
 	else if (style == 'BibTeX') {
 	  res += '<div class="nomargin"><p>@';
@@ -2518,12 +2674,14 @@ if (typeof module !== "undefined" && module.exports) {
 	  if (src.pages != null && src.pages != undefined) { arr[arr.length] = 'pages={'+src.pages[0]+'--'+src.pages[1]+'}'; };
 	  if (src.year != null && src.year != undefined) { arr[arr.length] = 'year={'+src.year.toString()+'}'; };
 	  if (src.url != null && src.url != undefined) { arr[arr.length] = 'url={https://'+src.url.replace('https://','').replace('http://','')+'}';
-	  if (src.date!= null && src.date != undefined) { arr[arr.length] = 'note={[Online; accesed '+date(src.date,'bx')+']}' }
+	    if (src.date!= null && src.date != undefined) { arr[arr.length] = 'note={[Online; accesed '+date(src.date,'bx')+']}' }
 	  };
+	  if (src.place != null && src.place != undefined) { arr[arr.length] = 'city={'+src.place+'}'; };
 	  if (src.publisher != null && src.publisher != undefined) { arr[arr.length] = 'publisher={'+src.publisher+'}'; };
 	  res += arrToStr(arr,'<p class="indent1">',',</p>');
 	  res += '<p>}</p></div>'
    	}
+   	
    	// JSON object in HTML
    	else if (style == 'JSON') {
 	  var obj = src;
@@ -2534,13 +2692,10 @@ if (typeof module !== "undefined" && module.exports) {
 	      string.push('<p class="indent1">',prop, ": ", objToStr(obj[prop]), ",</p>");
 	    };
 	    string.push("<p>}</p></div>");
-
-	    //is array
 	  }
 	  else {
 	    string.push(JSON.stringify(obj))
 	  }
-
 	  return string.join("")
    	}
 	return res;
@@ -2678,7 +2833,7 @@ if (typeof module !== "undefined" && module.exports) {
 	  download(txt, formatstyle + date + ".js", "text/javascript")
 	}
 	else if (formatstyle == 'BibTeX') {
-	  download(txt, formatstyle + date + ".BIBTEX", "application/x-bibtex")
+	  download(txt, formatstyle + date + ".bib", "application/x-bibtex")
 	}
       });
             
