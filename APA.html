@@ -117,7 +117,7 @@
 	  <input class="title" placeholder="e.g. 'Harry Potter and the philosophers stone'" type="text"></input>
 	</fieldset>
 	
-	<fieldset class="article e-article e-publication newspaper-article">
+	<fieldset class="article e-article newspaper-article">
 	  <legend>Journal:</legend>
 	  <input class="journal" placeholder="e.g. 'Science'" type="text"></input>
 	</fieldset>
@@ -575,7 +575,7 @@
 	  <input class="year" placeholder="bv. '2015'" type="number" min="1950"></input>
 	</fieldset>
 	
-	<fieldset class="article e-article e-publication newspaper-article">
+	<fieldset class="article e-article newspaper-article">
 	  <legend>Tijdschrift:</legend>
 	  <input class="journal" placeholder="bv. 'Science'" type="text"></input>
 	</fieldset>
@@ -1570,13 +1570,13 @@ if (typeof module !== "undefined" && module.exports) {
       
       function initiate() {
 	src = []
-	src[0] = {};
+	/*src[0] = {};
 	src[0].type = $('.type').val();
-	src[0].date = {from:[],to:[]};
+	/*src[0].date = {from:[],to:[]};
 	src[0].pubdate = {from:[],to:[]};
 	src[0].con = {};
 	src[0].con.date = {from:[],to:[]};
-	src[0].pages = [];
+	src[0].pages = [];*/
       }
     
       initiate();
@@ -1635,6 +1635,10 @@ if (typeof module !== "undefined" && module.exports) {
       {
 	nl:'Beschikbaar op',
 	en:'Available from'
+      },
+      {
+	nl:'Deze stijl heeft (in deze taal) geen wikipedia-artikel',
+	en:'This style hasn\'t got a wikipedia article in this language'
       }
       ];
       
@@ -1644,7 +1648,7 @@ if (typeof module !== "undefined" && module.exports) {
 	words:{
 		APA:'APA-stijl',
 		BibTeX:'BibTeX',
-		Vancouver: 'APA-stijl',
+		Vancouver: 'Bronvermelding',
 		JSON:'JSON',
 		EckartAPA:'APA-stijl'
 	      }
@@ -1707,7 +1711,7 @@ if (typeof module !== "undefined" && module.exports) {
 	$('.container:not(.invisible) .wikipedia').removeClass('wikiactive');
 	$('.container:not(.invisible) .wikiheader i').html('&#9654;');
       }
-      });*/
+      });/**/
       
       //The thing that makes the correct things apear
       
@@ -2181,7 +2185,7 @@ if (typeof module !== "undefined" && module.exports) {
 	    fieldObject[c[0].replace(/[^a-zA-Z0-9]+/g,"")] = c[1];
 	}
 	return fieldObject;
-	/*var obj = str.replace(/'/g, '"').replace(/"/g, '\\"').replace(/'/g, "\\'").replace(/"/g, '\\"');
+	/*var obj = str.replace(/'/g, '"').replace(/"/g, "\\"').replace(/'/g, "\\'").replace(/"/g, '\\"');
 	console.log(str)
 	console.log(obj)
 	return JSON.parse(obj)/**/
@@ -2205,7 +2209,14 @@ if (typeof module !== "undefined" && module.exports) {
 	delete obj.entryType;
 	return obj;
       }
-    
+        
+      /*function objToJSON(obj) {
+	var objKeysRegex = /({|,)(?:\s*)(?:')?([A-Za-z_$\.][A-Za-z0-9_ \-\.$]*)(?:')?(?:\s*):/g;
+	var newQuotedKeysString = objToStr(obj).replace(objKeysRegex, "$1\"$2\":");
+	var newObject = JSON.parse(newQuotedKeysString);
+	return newObject;
+      }*/
+            
       // For testing:
       //src = testsrc;
       //src = shuffleArr(src);
@@ -2250,7 +2261,7 @@ if (typeof module !== "undefined" && module.exports) {
 	if (Array.isArray(src.red)) {
 	  for (m=0;m<src.red.length;++m) {
 	    var ma = m + arr.length;
-	    arr[ma] = src.author[m];
+	    arr[ma] = src.red[m];
 	  };
 	}
 	else if (typeof src.red === 'string') {
@@ -2503,6 +2514,7 @@ if (typeof module !== "undefined" && module.exports) {
 	  word[t] = words[t][lan]
 	}
 	
+ 	// The book formatter
  	if (src.type.toLowerCase() == 'boek' || src.type.toLowerCase() == 'book') {
  	  if ((src.author != null && src.author != undefined)&&(src.red == null || src.red == undefined)) {
 	    res += name(src.author, style);
@@ -2538,6 +2550,7 @@ if (typeof module !== "undefined" && module.exports) {
 	    res += '; ' + src.year.toString() + '.';
   	  }
    	}
+	// The chapter formatter
 	else if (src.type.toLowerCase() == 'hoofdstuk' || src.type.toLowerCase() == 'chapter') {
 	  if (src.chapterauthor != null && src.chapterauthor != undefined) {
 	    res += name(src.chapterauthor, style) + '. ';
@@ -2579,6 +2592,7 @@ if (typeof module !== "undefined" && module.exports) {
 	    res += '; ' + src.year.toString() + '.';
 	  }
 	}
+	// The article formatter
 	else if (src.type.toLowerCase() == 'krantenartikel' || src.type.toLowerCase() == 'newspaper-article'||src.type.toLowerCase()=='article'||src.type.toLowerCase()=='artikel') {
 	  if ((src.author != null && src.author != undefined)&&(src.red == null || src.red == undefined)) {
 	    res += name(src.author, style);
@@ -2609,6 +2623,7 @@ if (typeof module !== "undefined" && module.exports) {
 	    res += ':' + src.pages[0].toString() + '-' + src.pages[1].toString() + '.';
   	  }
 	}
+	// The internet formatter
 	else if (src.type.toLowerCase()=='e-article'||src.type.toLowerCase()=='e-artikel'||src.type.toLowerCase()=='e-publicatie'||src.type.toLowerCase()=='e-publication') {
 	  if ((src.author != null && src.author != undefined)&&(src.red == null || src.red == undefined)) {
 	    res += name(src.author, style);
@@ -2723,10 +2738,10 @@ if (typeof module !== "undefined" && module.exports) {
       function update(type) {
 	var z = '.container:not(.invisible) ';
 	draftsrc.type = type;
-	if($(z+'.chapauthor').val()!=''){var str=$(z+'.chapauthor').val();if(Array.isArray(str)){for(x=0;x<str.length;x++){draftsrc.chapterauthor[x]=str[x]}}else{draftsrc.chapterauthor=$(z+'.chapauthor').val()}}
-	if($(z+'.author').val()!=''){var str=$(z+'.author').val();if(Array.isArray(str)){for(x=0;x<str.length;x++){draftsrc.author[x]=str[x]}}else{draftsrc.author=$(z+'.author').val()}}
+	if($(z+'.chapauthor').val()!=''){draftsrc.chapterauthor=[];$(z+'.chapauthor').each(function(){draftsrc.chapterauthor.push($(this).val())})}
+	if($(z+'.author').val()!=''){draftsrc.author=[];$(z+'.author').each(function(){draftsrc.author.push($(this).val())})}
 	if($(z+'.chapter').val()!=''){draftsrc.chapter=$(z+'.chapter').val()}
-	if($(z+'.red').val()!=''){var str=$(z+'.red').val();if(Array.isArray(str)){for(x=0;x<str.length;x++){draftsrc.red[x]=str[x]}}else{draftsrc.red=$(z+'.red').val()}}
+	if($(z+'.red').val()!=''){draftsrc.red=[];$(z+'.red').each(function(){draftsrc.red.push($(this).val())})}
 	if($(z+'.pubdate').val()!=''){draftsrc.pubdate.from=dateInputOutput($(z+'.pubdate').val())}
 	if($(z+'.date').val()!=''){draftsrc.date.from=dateInputOutput($(z+'.date').val())}
 	if($(z+'.condate.from').val()!=''){draftsrc.date.from=dateInputOutput($(z+'.condate.from').val())}
@@ -2742,27 +2757,34 @@ if (typeof module !== "undefined" && module.exports) {
 	if($(z+'.concountry').val()!=''){draftsrc.con.country=$(z+'.concountry').val()}
 	if($(z+'.pages.from').val()!=NaN&&$(z+'.pages.to').val()!=NaN){draftsrc.pages[0]=$(z+'.pages.from').val();draftsrc.pages[1]=$(z+'.pages.to').val()}
 	if($(z+'.print').val()!=''){draftsrc.print=$(z+'.print').val()}
-	if($(z+'.place').val()!=''){draftsrc.place=$(z+'.place').val()}
+	if($(z+'.place').val()!=''){draftsrc.place=[];$(z+'.place').each(function(){draftsrc.place.push($(this).val())})}
 	if($(z+'.publisher').val()!=''){draftsrc.publisher=$(z+'.publisher').val()}
 	if($(z+'.url').val()!=''){draftsrc.url=$(z+'.url').val()}
-// 	draftsrc = testsrc[0];
+	// For even more testing
+	//draftsrc = testsrc[0];
 	start(draftsrc,formatstyle,lan,draftholder);
       }
       
       update(type4);
             
-      start(src,formatstyle,lan,holder);
+//       start(src,formatstyle,lan,holder);
       
       function wiki() {
 	var url = "http://"+lan+".wikipedia.org/wiki/"+wikiwords[findWithAttr(wikiwords,'lan',lan)].words[formatstyle];
 	var title = url.split("/");
 	title = title[title.length - 1];
+	
+	// If wikipedia-article doesn't exist, 
+	var pre = '';
+	if (title == 'Bronvermelding') {
+	  pre = '<p class="warning"><i class="fa fa-exclamation-triangle"></i> '+words[9][lan]+'</p>'
+	}
 
 	//Get Leading paragraphs (section 0)
 	$.getJSON("https://"+lan+".wikipedia.org/w/api.php?action=parse&page="+title+"&prop=text&section=0&format=json&callback=?", function (data) {
-	  var text = data.parse.text['*'].split('</p>')[0].replace(/<p>/g,'').replace(/href="\/wiki/g,'href="https://'+lan+'.wikipedia.org/wiki').replace(/upload.wikimedia/g,'href="https://'+lan+'https://upload.wikimedia.');
+	  var text = data.parse.text['*'].split('</p>')[0].replace(/<p>/g,'').replace(/href="\/wiki/g,'href="https://'+lan+'.wikipedia.org/wiki').replace(/src="\/\/upload.wikimedia/g,'src="https://upload.wikimedia');
 // 	  $('.container:not(.invisible) .wikititle').html(title);
-	  $('.container:not(.invisible) .wikiextract').html($('.container:not(.invisible) .wikiextract').text(text).get(0).textContent+' <a class="link" href="' + url + '">' + words[4][lan] + '</a>');
+	  $('.container:not(.invisible) .wikiextract').html(pre+$('.container:not(.invisible) .wikiextract').text(text).get(0).textContent+' <a class="link" href="' + url + '">' + words[4][lan] + '</a>');
 	  $('.container:not(.invisible) .wikiextract').find('table,img,div').remove();
 	});
       }
@@ -2830,7 +2852,8 @@ if (typeof module !== "undefined" && module.exports) {
 	  elem.wordExport(formatstyle + date);
 	}
 	else if (formatstyle == 'JSON') {
-	  download(txt, formatstyle + date + ".js", "text/javascript")
+	  /*download(objToJSON(txt), formatstyle + date + ".json", "text/json")/**/
+	  download(txt, formatstyle + date + ".js", "text/javascript")/**/
 	}
 	else if (formatstyle == 'BibTeX') {
 	  download(txt, formatstyle + date + ".bib", "application/x-bibtex")
@@ -2843,18 +2866,20 @@ if (typeof module !== "undefined" && module.exports) {
       
       $('button:contains("Concept"),button:contains("draft")').click(function(){
 	clrDraft();
+	$('.container:not(.invisible) .inputtypeinput input, .container:not(.invisible) .inputtypeinput select:not(.type)').val('');
       });
       
       $('button:contains("Toevoegen"),button:contains("Add")').click(function(){
 	src[src.length] = draftsrc;
-	clrDraft()
+	clrDraft();
+	$('.container:not(.invisible) .inputtypeinput input, .container:not(.invisible) .inputtypeinput select:not(.type)').val('');
 	$('.container:not(.invisible) .draft').html('');
 	start(src,formatstyle,lan,holder);
 	$('.container:not(.invisible) .activecitation').removeClass('green').addClass('green');
       });
       
       $('button:contains("Uitprinten"),button:contains("Print")').click(function(){
-	window.print()
+	window.print();
       });
      
      }
