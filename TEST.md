@@ -1,28 +1,27 @@
-Doumentation
-============
-
-# Description
+Description
+===========
 
 converts all your BibTeX and JSON to BibTeX, JSON and HTML in your very own webbrowser! You can now even implement in to your own page.
 
-# Use
+Use
+===
 
 Call the function `citate()` with the parameters as listed [below](#input). The ouput is dependant of the second and third parameter. See [Input](#input) and [Output](#output) for input and output.
 
 <a name="input">
-## Input
+# Input
 </a>
 
 1. In the first parameter you pass the string, object or array of objects you want to convert
 2. In the second you pass the ouput type, as listed in the section Output
 3. In the third, you pass the language. Currently Dutch ("nl") and English ("en") are supported. BibTeX ouput doesn't support other languages than English.
 
-### BibTeX
+## BibTeX
 
 In the BibTeX-part of the input you simply pass a string of a citation in BibTeX-format. For the BibTeX documentation, see [wikipedia](https://en.wikipedia.org/wiki/BibTeX#Bibliographic_information_file). See [Output](#output) for the output.
 
 <a name="json">
-### JSON
+## JSON
 </a>
 
 In the JSON-part of the input you pass an object or the string of an object. Your JSON may be "relaxed"; You needn't worry about double quotes around every single key. Properties are specified below. Note that not all properties are supported for all types. See [Output](#output) for the output.
@@ -54,7 +53,7 @@ In the JSON-part of the input you pass an object or the string of an object. You
 * `publisher`: the publisher as a string
 
 <a name="output">
-## Ouput
+# Ouput
 </a>
 
 * BibTeX: Outputs a single string of a citation in BibTeX-format. Specify as "BibTeX". For the BibTeX documentation, see [wikipedia](https://en.wikipedia.org/wiki/BibTeX#Bibliographic_information_file).
@@ -63,12 +62,14 @@ In the JSON-part of the input you pass an object or the string of an object. You
   * Vancouver style; specify as "Vancouver"
   * APA style; specify as "APA"
 
-# Examples
+Examples
+========
 
 * An example can be found at []()
 * The official website, however, can be found at [larsgw.github.io/APA.html](larsgw.github.io/APA.html). This contains more support like input via webforms.
 
-# Dependencies
+Dependencies
+============
 
 * jQuery
 * BibTeXParser
