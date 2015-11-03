@@ -450,7 +450,7 @@
 	  <button><i class="fa fa-trash-o"></i> Clear</button>
 	</fieldset>
 	
-	<p>Following element is editable</p>
+	<p>Following element is editable. Sorting removes your adjustments</p>
 	
       <div class="citations">
 	<div class="citation activecitation" contenteditable="true" spellcheck="false"></div>
@@ -916,7 +916,7 @@
 	  <button><i class="fa fa-trash-o"></i> Leegmaken</button>
 	</fieldset>
 	
-	<p>Onderstaand element is bewerkbaar</p>
+	<p>Onderstaand element is bewerkbaar. Opnieuw sorteren doet je aanpassing teniet</p>
 	
       <div class="citations">
 	<div class="citation activecitation" contenteditable="true" spellcheck="false"></div>
@@ -942,610 +942,611 @@
     <script type="text/javascript" src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
     <script src="http://danml.com/js/download.js"></script>
     <script type="text/javascript">
-    function BibtexParser() {
-  this.pos = 0;
-  this.input = "";
-  
-  this.entries = {};
-  this.comments = [];
-  this.strings = {
-      JAN: "January",
-      FEB: "February",
-      MAR: "March",      
-      APR: "April",
-      MAY: "May",
-      JUN: "June",
-      JUL: "July",
-      AUG: "August",
-      SEP: "September",
-      OCT: "October",
-      NOV: "November",
-      DEC: "December"
-  };
-  this.currentKey = "";
-  this.currentEntry = "";
-  
+      function BibtexParser() {
+	this.pos = 0;
+	this.input = "";
+	
+	this.entries = {};
+	this.comments = [];
+	this.strings = {
+	    JAN: "January",
+	    FEB: "February",
+	    MAR: "March",      
+	    APR: "April",
+	    MAY: "May",
+	    JUN: "June",
+	    JUL: "July",
+	    AUG: "August",
+	    SEP: "September",
+	    OCT: "October",
+	    NOV: "November",
+	    DEC: "December"
+	};
+	this.currentKey = "";
+	this.currentEntry = "";
+	
 
-  this.setInput = function(t) {
-    this.input = t;
-  }
-  
-  this.getEntries = function() {
-      return this.entries;
-  }
+	this.setInput = function(t) {
+	  this.input = t;
+	}
+	
+	this.getEntries = function() {
+	    return this.entries;
+	}
 
-  this.isWhitespace = function(s) {
-    return (s == ' ' || s == '\r' || s == '\t' || s == '\n');
-  }
+	this.isWhitespace = function(s) {
+	  return (s == ' ' || s == '\r' || s == '\t' || s == '\n');
+	}
 
-  this.match = function(s) {
-    this.skipWhitespace();
-    if (this.input.substring(this.pos, this.pos+s.length) == s) {
-      this.pos += s.length;
-    } else {
-      throw "Token mismatch, expected " + s + ", found " + this.input.substring(this.pos);
-    }
-    this.skipWhitespace();
-  }
+	this.match = function(s) {
+	  this.skipWhitespace();
+	  if (this.input.substring(this.pos, this.pos+s.length) == s) {
+	    this.pos += s.length;
+	  } else {
+	    throw "Token mismatch, expected " + s + ", found " + this.input.substring(this.pos);
+	  }
+	  this.skipWhitespace();
+	}
 
-  this.tryMatch = function(s) {
-    this.skipWhitespace();
-    if (this.input.substring(this.pos, this.pos+s.length) == s) {
-      return true;
-    } else {
-      return false;
-    }
-    this.skipWhitespace();
-  }
+	this.tryMatch = function(s) {
+	  this.skipWhitespace();
+	  if (this.input.substring(this.pos, this.pos+s.length) == s) {
+	    return true;
+	  } else {
+	    return false;
+	  }
+	  this.skipWhitespace();
+	}
 
-  this.skipWhitespace = function() {
-    while (this.isWhitespace(this.input[this.pos])) {
-      this.pos++;
-    }
-    if (this.input[this.pos] == "%") {
-      while(this.input[this.pos] != "\n") {
-        this.pos++;
+	this.skipWhitespace = function() {
+	  while (this.isWhitespace(this.input[this.pos])) {
+	    this.pos++;
+	  }
+	  if (this.input[this.pos] == "%") {
+	    while(this.input[this.pos] != "\n") {
+	      this.pos++;
+	    }
+	    this.skipWhitespace();
+	  }
+	}
+
+	this.value_braces = function() {
+	  var bracecount = 0;
+	  this.match("{");
+	  var start = this.pos;
+	  while(true) {
+	    if (this.input[this.pos] == '}' && this.input[this.pos-1] != '\\') {
+	      if (bracecount > 0) {
+		bracecount--;
+	      } else {
+		var end = this.pos;
+		this.match("}");
+		return this.input.substring(start, end);
+	      }
+	    } else if (this.input[this.pos] == '{') {
+	      bracecount++;
+	    } else if (this.pos == this.input.length-1) {
+	      throw "Unterminated value";
+	    }
+	    this.pos++;
+	  }
+	}
+
+	this.value_quotes = function() {
+	  this.match('"');
+	  var start = this.pos;
+	  while(true) {
+	    if (this.input[this.pos] == '"' && this.input[this.pos-1] != '\\') {
+		var end = this.pos;
+		this.match('"');
+		return this.input.substring(start, end);
+	    } else if (this.pos == this.input.length-1) {
+	      throw "Unterminated value:" + this.input.substring(start);
+	    }
+	    this.pos++;
+	  }
+	}
+	
+	this.single_value = function() {
+	  var start = this.pos;
+	  if (this.tryMatch("{")) {
+	    return this.value_braces();
+	  } else if (this.tryMatch('"')) {
+	    return this.value_quotes();
+	  } else {
+	    var k = this.key();
+	    if (this.strings[k/*.toUpperCase()*/]) {
+	      return this.strings[k];
+	    } else if (k.match("^[0-9]+$")) {
+	      return k;
+	    } else {
+	      throw "Value expected:" + this.input.substring(start);
+	    }
+	  }
+	}
+	
+	this.value = function() {
+	  var values = [];
+	  values.push(this.single_value());
+	  while (this.tryMatch("#")) {
+	    this.match("#");
+	    values.push(this.single_value());
+	  }
+	  return values.join("");
+	}
+
+	this.key = function() {
+	  var start = this.pos;
+	  while(true) {
+	    if (this.pos == this.input.length) {
+	      throw "Runaway key";
+	    }
+	  
+	    if (this.input[this.pos].match("[a-zA-Z0-9_:\\./-]")) {
+	      this.pos++
+	    } else {
+	      return this.input.substring(start, this.pos)/*.toUpperCase()*/;
+	    }
+	  }
+	}
+
+	this.key_equals_value = function() {
+	  var key = this.key();
+	  if (this.tryMatch("=")) {
+	    this.match("=");
+	    var val = this.value();
+	    return [ key, val ];
+	  } else {
+	    throw "... = value expected, equals sign missing:" + this.input.substring(this.pos);
+	  }
+	}
+
+	this.key_value_list = function() {
+	  var kv = this.key_equals_value();
+	  this.entries[this.currentEntry][kv[0]] = kv[1];
+	  while (this.tryMatch(",")) {
+	    this.match(",");
+	    // fixes problems with commas at the end of a list
+	    if (this.tryMatch("}")) {
+	      break;
+	    }
+	    kv = this.key_equals_value();
+	    this.entries[this.currentEntry][kv[0]] = kv[1];
+	  }
+	}
+
+	this.entry_body = function(d) {
+	  this.currentEntry = this.key();
+	  this.entries[this.currentEntry] = { entryType: d.substring(1) };
+	  this.match(",");
+	  this.key_value_list();
+	}
+
+	this.directive = function () {
+	  this.match("@");
+	  return "@"+this.key();
+	}
+
+	this.string = function () {
+	  var kv = this.key_equals_value();
+	  this.strings[kv[0]/*.toUpperCase()*/] = kv[1];
+	}
+
+	this.preamble = function() {
+	  this.value();
+	}
+
+	this.comment = function() {
+	  var start = this.pos;
+	  while(true) {
+	    if (this.pos == this.input.length) {
+	      throw "Runaway comment";
+	    }
+	  
+	    if (this.input[this.pos] != '}') {
+	      this.pos++
+	    } else {
+	      this.comments.push(this.input.substring(start, this.pos));
+	      return;
+	    }
+	  }
+	}
+
+	this.entry = function(d) {
+	  this.entry_body(d);
+	}
+
+	this.bibtex = function() {
+	  while(this.tryMatch("@")) {
+	    var d = this.directive()/*.toUpperCase()*/;
+	    this.match("{");
+	    if (d == "@STRING") {
+	      this.string();
+	    } else if (d == "@PREAMBLE") {
+	      this.preamble();
+	    } else if (d == "@COMMENT") {
+	      this.comment();
+	    } else {
+	      this.entry(d);
+	    }
+	    this.match("}");
+	  }
+
+	  this.entries['@comments'] = this.comments;
+	}
       }
-      this.skipWhitespace();
-    }
-  }
 
-  this.value_braces = function() {
-    var bracecount = 0;
-    this.match("{");
-    var start = this.pos;
-    while(true) {
-      if (this.input[this.pos] == '}' && this.input[this.pos-1] != '\\') {
-        if (bracecount > 0) {
-          bracecount--;
-        } else {
-          var end = this.pos;
-          this.match("}");
-          return this.input.substring(start, end);
-        }
-      } else if (this.input[this.pos] == '{') {
-        bracecount++;
-      } else if (this.pos == this.input.length-1) {
-        throw "Unterminated value";
+      //Runs the parser
+      function doParse(input) {
+	var b = new BibtexParser()
+	b.setInput(input)
+	b.bibtex()
+	return b.entries
       }
-      this.pos++;
-    }
-  }
 
-  this.value_quotes = function() {
-    this.match('"');
-    var start = this.pos;
-    while(true) {
-      if (this.input[this.pos] == '"' && this.input[this.pos-1] != '\\') {
-          var end = this.pos;
-          this.match('"');
-          return this.input.substring(start, end);
-      } else if (this.pos == this.input.length-1) {
-        throw "Unterminated value:" + this.input.substring(start);
-      }
-      this.pos++;
-    }
-  }
-  
-  this.single_value = function() {
-    var start = this.pos;
-    if (this.tryMatch("{")) {
-      return this.value_braces();
-    } else if (this.tryMatch('"')) {
-      return this.value_quotes();
-    } else {
-      var k = this.key();
-      if (this.strings[k/*.toUpperCase()*/]) {
-        return this.strings[k];
-      } else if (k.match("^[0-9]+$")) {
-        return k;
-      } else {
-        throw "Value expected:" + this.input.substring(start);
-      }
-    }
-  }
-  
-  this.value = function() {
-    var values = [];
-    values.push(this.single_value());
-    while (this.tryMatch("#")) {
-      this.match("#");
-      values.push(this.single_value());
-    }
-    return values.join("");
-  }
-
-  this.key = function() {
-    var start = this.pos;
-    while(true) {
-      if (this.pos == this.input.length) {
-        throw "Runaway key";
-      }
-    
-      if (this.input[this.pos].match("[a-zA-Z0-9_:\\./-]")) {
-        this.pos++
-      } else {
-        return this.input.substring(start, this.pos)/*.toUpperCase()*/;
-      }
-    }
-  }
-
-  this.key_equals_value = function() {
-    var key = this.key();
-    if (this.tryMatch("=")) {
-      this.match("=");
-      var val = this.value();
-      return [ key, val ];
-    } else {
-      throw "... = value expected, equals sign missing:" + this.input.substring(this.pos);
-    }
-  }
-
-  this.key_value_list = function() {
-    var kv = this.key_equals_value();
-    this.entries[this.currentEntry][kv[0]] = kv[1];
-    while (this.tryMatch(",")) {
-      this.match(",");
-      // fixes problems with commas at the end of a list
-      if (this.tryMatch("}")) {
-        break;
-      }
-      kv = this.key_equals_value();
-      this.entries[this.currentEntry][kv[0]] = kv[1];
-    }
-  }
-
-  this.entry_body = function(d) {
-    this.currentEntry = this.key();
-    this.entries[this.currentEntry] = { entryType: d.substring(1) };
-    this.match(",");
-    this.key_value_list();
-  }
-
-  this.directive = function () {
-    this.match("@");
-    return "@"+this.key();
-  }
-
-  this.string = function () {
-    var kv = this.key_equals_value();
-    this.strings[kv[0]/*.toUpperCase()*/] = kv[1];
-  }
-
-  this.preamble = function() {
-    this.value();
-  }
-
-  this.comment = function() {
-    var start = this.pos;
-    while(true) {
-      if (this.pos == this.input.length) {
-        throw "Runaway comment";
-      }
-    
-      if (this.input[this.pos] != '}') {
-        this.pos++
-      } else {
-        this.comments.push(this.input.substring(start, this.pos));
-        return;
-      }
-    }
-  }
-
-  this.entry = function(d) {
-    this.entry_body(d);
-  }
-
-  this.bibtex = function() {
-    while(this.tryMatch("@")) {
-      var d = this.directive()/*.toUpperCase()*/;
-      this.match("{");
-      if (d == "@STRING") {
-        this.string();
-      } else if (d == "@PREAMBLE") {
-        this.preamble();
-      } else if (d == "@COMMENT") {
-        this.comment();
-      } else {
-        this.entry(d);
-      }
-      this.match("}");
-    }
-
-    this.entries['@comments'] = this.comments;
-  }
-}
-
-//Runs the parser
-function doParse(input) {
-  var b = new BibtexParser()
-  b.setInput(input)
-  b.bibtex()
-  return b.entries
-}
-
-// module.exports = doParse
+      // module.exports = doParse
     </script>
     <script type="text/javascript">
-    /* FileSaver.js
- * A saveAs() FileSaver implementation.
- * 1.1.20151003
- *
- * By Eli Grey, http://eligrey.com
- * License: X11/MIT
- *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
- */
+      /* FileSaver.js
+      * A saveAs() FileSaver implementation.
+      * 1.1.20151003
+      *
+      * By Eli Grey, http://eligrey.com
+      * License: X11/MIT
+      *   See https://github.com/eligrey/FileSaver.js/blob/master/LICENSE.md
+      */
 
-/*global self */
-/*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
+      /*global self */
+      /*jslint bitwise: true, indent: 4, laxbreak: true, laxcomma: true, smarttabs: true, plusplus: true */
 
-/*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
+      /*! @source http://purl.eligrey.com/github/FileSaver.js/blob/master/FileSaver.js */
 
-var saveAs = saveAs || (function(view) {
-	"use strict";
-	// IE <10 is explicitly unsupported
-	if (typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
-		return;
-	}
-	var
-		  doc = view.document
-		  // only get URL when necessary in case Blob.js hasn't overridden it yet
-		, get_URL = function() {
-			return view.URL || view.webkitURL || view;
-		}
-		, save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
-		, can_use_save_link = "download" in save_link
-		, click = function(node) {
-			var event = new MouseEvent("click");
-			node.dispatchEvent(event);
-		}
-		, is_safari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
-		, webkit_req_fs = view.webkitRequestFileSystem
-		, req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem
-		, throw_outside = function(ex) {
-			(view.setImmediate || view.setTimeout)(function() {
-				throw ex;
-			}, 0);
-		}
-		, force_saveable_type = "application/octet-stream"
-		, fs_min_size = 0
-		// See https://code.google.com/p/chromium/issues/detail?id=375297#c7 and
-		// https://github.com/eligrey/FileSaver.js/commit/485930a#commitcomment-8768047
-		// for the reasoning behind the timeout and revocation flow
-		, arbitrary_revoke_timeout = 500 // in ms
-		, revoke = function(file) {
-			var revoker = function() {
-				if (typeof file === "string") { // file is an object URL
-					get_URL().revokeObjectURL(file);
-				} else { // file is a File
-					file.remove();
-				}
-			};
-			if (view.chrome) {
-				revoker();
-			} else {
-				setTimeout(revoker, arbitrary_revoke_timeout);
-			}
-		}
-		, dispatch = function(filesaver, event_types, event) {
-			event_types = [].concat(event_types);
-			var i = event_types.length;
-			while (i--) {
-				var listener = filesaver["on" + event_types[i]];
-				if (typeof listener === "function") {
-					try {
-						listener.call(filesaver, event || filesaver);
-					} catch (ex) {
-						throw_outside(ex);
-					}
-				}
-			}
-		}
-		, auto_bom = function(blob) {
-			// prepend BOM for UTF-8 XML and text/* types (including HTML)
-			if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
-				return new Blob(["\ufeff", blob], {type: blob.type});
-			}
-			return blob;
-		}
-		, FileSaver = function(blob, name, no_auto_bom) {
-			if (!no_auto_bom) {
-				blob = auto_bom(blob);
-			}
-			// First try a.download, then web filesystem, then object URLs
-			var
-				  filesaver = this
-				, type = blob.type
-				, blob_changed = false
-				, object_url
-				, target_view
-				, dispatch_all = function() {
-					dispatch(filesaver, "writestart progress write writeend".split(" "));
-				}
-				// on any filesys errors revert to saving with object URLs
-				, fs_error = function() {
-					if (target_view && is_safari && typeof FileReader !== "undefined") {
-						// Safari doesn't allow downloading of blob urls
-						var reader = new FileReader();
-						reader.onloadend = function() {
-							var base64Data = reader.result;
-							target_view.location.href = "data:attachment/file" + base64Data.slice(base64Data.search(/[,;]/));
-							filesaver.readyState = filesaver.DONE;
-							dispatch_all();
-						};
-						reader.readAsDataURL(blob);
-						filesaver.readyState = filesaver.INIT;
-						return;
-					}
-					// don't create more object URLs than needed
-					if (blob_changed || !object_url) {
-						object_url = get_URL().createObjectURL(blob);
-					}
-					if (target_view) {
-						target_view.location.href = object_url;
-					} else {
-						var new_tab = view.open(object_url, "_blank");
-						if (new_tab == undefined && is_safari) {
-							//Apple do not allow window.open, see http://bit.ly/1kZffRI
-							view.location.href = object_url
-						}
-					}
-					filesaver.readyState = filesaver.DONE;
-					dispatch_all();
-					revoke(object_url);
-				}
-				, abortable = function(func) {
-					return function() {
-						if (filesaver.readyState !== filesaver.DONE) {
-							return func.apply(this, arguments);
-						}
-					};
-				}
-				, create_if_not_found = {create: true, exclusive: false}
-				, slice
-			;
-			filesaver.readyState = filesaver.INIT;
-			if (!name) {
-				name = "download";
-			}
-			if (can_use_save_link) {
-				object_url = get_URL().createObjectURL(blob);
-				save_link.href = object_url;
-				save_link.download = name;
-				setTimeout(function() {
-					click(save_link);
-					dispatch_all();
-					revoke(object_url);
-					filesaver.readyState = filesaver.DONE;
-				});
-				return;
-			}
-			// Object and web filesystem URLs have a problem saving in Google Chrome when
-			// viewed in a tab, so I force save with application/octet-stream
-			// http://code.google.com/p/chromium/issues/detail?id=91158
-			// Update: Google errantly closed 91158, I submitted it again:
-			// https://code.google.com/p/chromium/issues/detail?id=389642
-			if (view.chrome && type && type !== force_saveable_type) {
-				slice = blob.slice || blob.webkitSlice;
-				blob = slice.call(blob, 0, blob.size, force_saveable_type);
-				blob_changed = true;
-			}
-			// Since I can't be sure that the guessed media type will trigger a download
-			// in WebKit, I append .download to the filename.
-			// https://bugs.webkit.org/show_bug.cgi?id=65440
-			if (webkit_req_fs && name !== "download") {
-				name += ".download";
-			}
-			if (type === force_saveable_type || webkit_req_fs) {
-				target_view = view;
-			}
-			if (!req_fs) {
-				fs_error();
-				return;
-			}
-			fs_min_size += blob.size;
-			req_fs(view.TEMPORARY, fs_min_size, abortable(function(fs) {
-				fs.root.getDirectory("saved", create_if_not_found, abortable(function(dir) {
-					var save = function() {
-						dir.getFile(name, create_if_not_found, abortable(function(file) {
-							file.createWriter(abortable(function(writer) {
-								writer.onwriteend = function(event) {
-									target_view.location.href = file.toURL();
-									filesaver.readyState = filesaver.DONE;
-									dispatch(filesaver, "writeend", event);
-									revoke(file);
-								};
-								writer.onerror = function() {
-									var error = writer.error;
-									if (error.code !== error.ABORT_ERR) {
-										fs_error();
-									}
-								};
-								"writestart progress write abort".split(" ").forEach(function(event) {
-									writer["on" + event] = filesaver["on" + event];
-								});
-								writer.write(blob);
-								filesaver.abort = function() {
-									writer.abort();
-									filesaver.readyState = filesaver.DONE;
-								};
-								filesaver.readyState = filesaver.WRITING;
-							}), fs_error);
-						}), fs_error);
-					};
-					dir.getFile(name, {create: false}, abortable(function(file) {
-						// delete file if it already exists
-						file.remove();
-						save();
-					}), abortable(function(ex) {
-						if (ex.code === ex.NOT_FOUND_ERR) {
-							save();
-						} else {
-							fs_error();
-						}
-					}));
-				}), fs_error);
-			}), fs_error);
-		}
-		, FS_proto = FileSaver.prototype
-		, saveAs = function(blob, name, no_auto_bom) {
-			return new FileSaver(blob, name, no_auto_bom);
-		}
-	;
-	// IE 10+ (native saveAs)
-	if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
-		return function(blob, name, no_auto_bom) {
-			if (!no_auto_bom) {
-				blob = auto_bom(blob);
-			}
-			return navigator.msSaveOrOpenBlob(blob, name || "download");
-		};
-	}
+      var saveAs = saveAs || (function(view) {
+	      "use strict";
+	      // IE <10 is explicitly unsupported
+	      if (typeof navigator !== "undefined" && /MSIE [1-9]\./.test(navigator.userAgent)) {
+		      return;
+	      }
+	      var
+			doc = view.document
+			// only get URL when necessary in case Blob.js hasn't overridden it yet
+		      , get_URL = function() {
+			      return view.URL || view.webkitURL || view;
+		      }
+		      , save_link = doc.createElementNS("http://www.w3.org/1999/xhtml", "a")
+		      , can_use_save_link = "download" in save_link
+		      , click = function(node) {
+			      var event = new MouseEvent("click");
+			      node.dispatchEvent(event);
+		      }
+		      , is_safari = /Version\/[\d\.]+.*Safari/.test(navigator.userAgent)
+		      , webkit_req_fs = view.webkitRequestFileSystem
+		      , req_fs = view.requestFileSystem || webkit_req_fs || view.mozRequestFileSystem
+		      , throw_outside = function(ex) {
+			      (view.setImmediate || view.setTimeout)(function() {
+				      throw ex;
+			      }, 0);
+		      }
+		      , force_saveable_type = "application/octet-stream"
+		      , fs_min_size = 0
+		      // See https://code.google.com/p/chromium/issues/detail?id=375297#c7 and
+		      // https://github.com/eligrey/FileSaver.js/commit/485930a#commitcomment-8768047
+		      // for the reasoning behind the timeout and revocation flow
+		      , arbitrary_revoke_timeout = 500 // in ms
+		      , revoke = function(file) {
+			      var revoker = function() {
+				      if (typeof file === "string") { // file is an object URL
+					      get_URL().revokeObjectURL(file);
+				      } else { // file is a File
+					      file.remove();
+				      }
+			      };
+			      if (view.chrome) {
+				      revoker();
+			      } else {
+				      setTimeout(revoker, arbitrary_revoke_timeout);
+			      }
+		      }
+		      , dispatch = function(filesaver, event_types, event) {
+			      event_types = [].concat(event_types);
+			      var i = event_types.length;
+			      while (i--) {
+				      var listener = filesaver["on" + event_types[i]];
+				      if (typeof listener === "function") {
+					      try {
+						      listener.call(filesaver, event || filesaver);
+					      } catch (ex) {
+						      throw_outside(ex);
+					      }
+				      }
+			      }
+		      }
+		      , auto_bom = function(blob) {
+			      // prepend BOM for UTF-8 XML and text/* types (including HTML)
+			      if (/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(blob.type)) {
+				      return new Blob(["\ufeff", blob], {type: blob.type});
+			      }
+			      return blob;
+		      }
+		      , FileSaver = function(blob, name, no_auto_bom) {
+			      if (!no_auto_bom) {
+				      blob = auto_bom(blob);
+			      }
+			      // First try a.download, then web filesystem, then object URLs
+			      var
+					filesaver = this
+				      , type = blob.type
+				      , blob_changed = false
+				      , object_url
+				      , target_view
+				      , dispatch_all = function() {
+					      dispatch(filesaver, "writestart progress write writeend".split(" "));
+				      }
+				      // on any filesys errors revert to saving with object URLs
+				      , fs_error = function() {
+					      if (target_view && is_safari && typeof FileReader !== "undefined") {
+						      // Safari doesn't allow downloading of blob urls
+						      var reader = new FileReader();
+						      reader.onloadend = function() {
+							      var base64Data = reader.result;
+							      target_view.location.href = "data:attachment/file" + base64Data.slice(base64Data.search(/[,;]/));
+							      filesaver.readyState = filesaver.DONE;
+							      dispatch_all();
+						      };
+						      reader.readAsDataURL(blob);
+						      filesaver.readyState = filesaver.INIT;
+						      return;
+					      }
+					      // don't create more object URLs than needed
+					      if (blob_changed || !object_url) {
+						      object_url = get_URL().createObjectURL(blob);
+					      }
+					      if (target_view) {
+						      target_view.location.href = object_url;
+					      } else {
+						      var new_tab = view.open(object_url, "_blank");
+						      if (new_tab == undefined && is_safari) {
+							      //Apple do not allow window.open, see http://bit.ly/1kZffRI
+							      view.location.href = object_url
+						      }
+					      }
+					      filesaver.readyState = filesaver.DONE;
+					      dispatch_all();
+					      revoke(object_url);
+				      }
+				      , abortable = function(func) {
+					      return function() {
+						      if (filesaver.readyState !== filesaver.DONE) {
+							      return func.apply(this, arguments);
+						      }
+					      };
+				      }
+				      , create_if_not_found = {create: true, exclusive: false}
+				      , slice
+			      ;
+			      filesaver.readyState = filesaver.INIT;
+			      if (!name) {
+				      name = "download";
+			      }
+			      if (can_use_save_link) {
+				      object_url = get_URL().createObjectURL(blob);
+				      save_link.href = object_url;
+				      save_link.download = name;
+				      setTimeout(function() {
+					      click(save_link);
+					      dispatch_all();
+					      revoke(object_url);
+					      filesaver.readyState = filesaver.DONE;
+				      });
+				      return;
+			      }
+			      // Object and web filesystem URLs have a problem saving in Google Chrome when
+			      // viewed in a tab, so I force save with application/octet-stream
+			      // http://code.google.com/p/chromium/issues/detail?id=91158
+			      // Update: Google errantly closed 91158, I submitted it again:
+			      // https://code.google.com/p/chromium/issues/detail?id=389642
+			      if (view.chrome && type && type !== force_saveable_type) {
+				      slice = blob.slice || blob.webkitSlice;
+				      blob = slice.call(blob, 0, blob.size, force_saveable_type);
+				      blob_changed = true;
+			      }
+			      // Since I can't be sure that the guessed media type will trigger a download
+			      // in WebKit, I append .download to the filename.
+			      // https://bugs.webkit.org/show_bug.cgi?id=65440
+			      if (webkit_req_fs && name !== "download") {
+				      name += ".download";
+			      }
+			      if (type === force_saveable_type || webkit_req_fs) {
+				      target_view = view;
+			      }
+			      if (!req_fs) {
+				      fs_error();
+				      return;
+			      }
+			      fs_min_size += blob.size;
+			      req_fs(view.TEMPORARY, fs_min_size, abortable(function(fs) {
+				      fs.root.getDirectory("saved", create_if_not_found, abortable(function(dir) {
+					      var save = function() {
+						      dir.getFile(name, create_if_not_found, abortable(function(file) {
+							      file.createWriter(abortable(function(writer) {
+								      writer.onwriteend = function(event) {
+									      target_view.location.href = file.toURL();
+									      filesaver.readyState = filesaver.DONE;
+									      dispatch(filesaver, "writeend", event);
+									      revoke(file);
+								      };
+								      writer.onerror = function() {
+									      var error = writer.error;
+									      if (error.code !== error.ABORT_ERR) {
+										      fs_error();
+									      }
+								      };
+								      "writestart progress write abort".split(" ").forEach(function(event) {
+									      writer["on" + event] = filesaver["on" + event];
+								      });
+								      writer.write(blob);
+								      filesaver.abort = function() {
+									      writer.abort();
+									      filesaver.readyState = filesaver.DONE;
+								      };
+								      filesaver.readyState = filesaver.WRITING;
+							      }), fs_error);
+						      }), fs_error);
+					      };
+					      dir.getFile(name, {create: false}, abortable(function(file) {
+						      // delete file if it already exists
+						      file.remove();
+						      save();
+					      }), abortable(function(ex) {
+						      if (ex.code === ex.NOT_FOUND_ERR) {
+							      save();
+						      } else {
+							      fs_error();
+						      }
+					      }));
+				      }), fs_error);
+			      }), fs_error);
+		      }
+		      , FS_proto = FileSaver.prototype
+		      , saveAs = function(blob, name, no_auto_bom) {
+			      return new FileSaver(blob, name, no_auto_bom);
+		      }
+	      ;
+	      // IE 10+ (native saveAs)
+	      if (typeof navigator !== "undefined" && navigator.msSaveOrOpenBlob) {
+		      return function(blob, name, no_auto_bom) {
+			      if (!no_auto_bom) {
+				      blob = auto_bom(blob);
+			      }
+			      return navigator.msSaveOrOpenBlob(blob, name || "download");
+		      };
+	      }
 
-	FS_proto.abort = function() {
-		var filesaver = this;
-		filesaver.readyState = filesaver.DONE;
-		dispatch(filesaver, "abort");
-	};
-	FS_proto.readyState = FS_proto.INIT = 0;
-	FS_proto.WRITING = 1;
-	FS_proto.DONE = 2;
+	      FS_proto.abort = function() {
+		      var filesaver = this;
+		      filesaver.readyState = filesaver.DONE;
+		      dispatch(filesaver, "abort");
+	      };
+	      FS_proto.readyState = FS_proto.INIT = 0;
+	      FS_proto.WRITING = 1;
+	      FS_proto.DONE = 2;
 
-	FS_proto.error =
-	FS_proto.onwritestart =
-	FS_proto.onprogress =
-	FS_proto.onwrite =
-	FS_proto.onabort =
-	FS_proto.onerror =
-	FS_proto.onwriteend =
-		null;
+	      FS_proto.error =
+	      FS_proto.onwritestart =
+	      FS_proto.onprogress =
+	      FS_proto.onwrite =
+	      FS_proto.onabort =
+	      FS_proto.onerror =
+	      FS_proto.onwriteend =
+		      null;
 
-	return saveAs;
-}(
-	   typeof self !== "undefined" && self
-	|| typeof window !== "undefined" && window
-	|| this.content
-));
-// `self` is undefined in Firefox for Android content script context
-// while `this` is nsIContentFrameMessageManager
-// with an attribute `content` that corresponds to the window
+	      return saveAs;
+      }(
+		typeof self !== "undefined" && self
+	      || typeof window !== "undefined" && window
+	      || this.content
+      ));
+      // `self` is undefined in Firefox for Android content script context
+      // while `this` is nsIContentFrameMessageManager
+      // with an attribute `content` that corresponds to the window
 
-if (typeof module !== "undefined" && module.exports) {
-  module.exports.saveAs = saveAs;
-} else if ((typeof define !== "undefined" && define !== null) && (define.amd != null)) {
-  define([], function() {
-    return saveAs;
-  });
-}
+      if (typeof module !== "undefined" && module.exports) {
+	module.exports.saveAs = saveAs;
+      } else if ((typeof define !== "undefined" && define !== null) && (define.amd != null)) {
+	define([], function() {
+	  return saveAs;
+	});
+      }
     </script>
     <!--<script type="text/javascript" src="zipjs.js"></script>
     <script type="text/javascript" src="docx.js"></script>-->
     <script type="text/javascript">
-    if (typeof jQuery !== "undefined" && typeof saveAs !== "undefined") {
-    (function($) {
-        $.fn.wordExport = function(fileName) {
-            fileName = typeof fileName !== 'undefined' ? fileName : "jQuery-Word-Export";
-            var static = {
-                mhtml: {
-                    top: "Mime-Version: 1.0\nContent-Base: " + location.href + "\nContent-Type: Multipart/related; boundary=\"NEXT.ITEM-BOUNDARY\";type=\"text/html\"\n\n--NEXT.ITEM-BOUNDARY\nContent-Type: text/html; charset=\"utf-8\"\nContent-Location: " + location.href + "\n\n<!DOCTYPE html>\n<html>\n_html_</html>",
-                    head: "<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<style>\n_styles_\n</style>\n</head>\n",
-                    body: "<body>_body_</body>"
-                }
-            };
-            var options = {
-                maxWidth: 624
-            };
-            // Clone selected element before manipulating it
-            var markup = $(this).clone();
+      if (typeof jQuery !== "undefined" && typeof saveAs !== "undefined") {
+      (function($) {
+	  $.fn.wordExport = function(fileName) {
+	      fileName = typeof fileName !== 'undefined' ? fileName : "jQuery-Word-Export";
+	      var static = {
+		  mhtml: {
+		      top: "Mime-Version: 1.0\nContent-Base: " + location.href + "\nContent-Type: Multipart/related; boundary=\"NEXT.ITEM-BOUNDARY\";type=\"text/html\"\n\n--NEXT.ITEM-BOUNDARY\nContent-Type: text/html; charset=\"utf-8\"\nContent-Location: " + location.href + "\n\n<!DOCTYPE html>\n<html>\n_html_</html>",
+		      head: "<head>\n<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\">\n<style>\n_styles_\n</style>\n</head>\n",
+		      body: "<body>_body_</body>"
+		  }
+	      };
+	      var options = {
+		  maxWidth: 624
+	      };
+	      // Clone selected element before manipulating it
+	      var markup = $(this).clone();
 
-            // Remove hidden elements from the output
-            markup.each(function() {
-                var self = $(this);
-                if (self.is(':hidden'))
-                    self.remove();
-            });
+	      // Remove hidden elements from the output
+	      markup.each(function() {
+		  var self = $(this);
+		  if (self.is(':hidden'))
+		      self.remove();
+	      });
 
-            // Embed all images using Data URLs
-            var images = Array();
-            var img = markup.find('img');
-            for (var i = 0; i < img.length; i++) {
-                // Calculate dimensions of output image
-                var w = Math.min(img[i].width, options.maxWidth);
-                var h = img[i].height * (w / img[i].width);
-                // Create canvas for converting image to data URL
-                var canvas = document.createElement("CANVAS");
-                canvas.width = w;
-                canvas.height = h;
-                // Draw image to canvas
-                var context = canvas.getContext('2d');
-                context.drawImage(img[i], 0, 0, w, h);
-                // Get data URL encoding of image
-                var uri = canvas.toDataURL("image/png");
-                $(img[i]).attr("src", img[i].src);
-                img[i].width = w;
-                img[i].height = h;
-                // Save encoded image to array
-                images[i] = {
-                    type: uri.substring(uri.indexOf(":") + 1, uri.indexOf(";")),
-                    encoding: uri.substring(uri.indexOf(";") + 1, uri.indexOf(",")),
-                    location: $(img[i]).attr("src"),
-                    data: uri.substring(uri.indexOf(",") + 1)
-                };
-            }
+	      // Embed all images using Data URLs
+	      var images = Array();
+	      var img = markup.find('img');
+	      for (var i = 0; i < img.length; i++) {
+		  // Calculate dimensions of output image
+		  var w = Math.min(img[i].width, options.maxWidth);
+		  var h = img[i].height * (w / img[i].width);
+		  // Create canvas for converting image to data URL
+		  var canvas = document.createElement("CANVAS");
+		  canvas.width = w;
+		  canvas.height = h;
+		  // Draw image to canvas
+		  var context = canvas.getContext('2d');
+		  context.drawImage(img[i], 0, 0, w, h);
+		  // Get data URL encoding of image
+		  var uri = canvas.toDataURL("image/png");
+		  $(img[i]).attr("src", img[i].src);
+		  img[i].width = w;
+		  img[i].height = h;
+		  // Save encoded image to array
+		  images[i] = {
+		      type: uri.substring(uri.indexOf(":") + 1, uri.indexOf(";")),
+		      encoding: uri.substring(uri.indexOf(";") + 1, uri.indexOf(",")),
+		      location: $(img[i]).attr("src"),
+		      data: uri.substring(uri.indexOf(",") + 1)
+		  };
+	      }
 
-            // Prepare bottom of mhtml file with image data
-            var mhtmlBottom = "\n";
-            for (var i = 0; i < images.length; i++) {
-                mhtmlBottom += "--NEXT.ITEM-BOUNDARY\n";
-                mhtmlBottom += "Content-Location: " + images[i].location + "\n";
-                mhtmlBottom += "Content-Type: " + images[i].type + "\n";
-                mhtmlBottom += "Content-Transfer-Encoding: " + images[i].encoding + "\n\n";
-                mhtmlBottom += images[i].data + "\n\n";
-            }
-            mhtmlBottom += "--NEXT.ITEM-BOUNDARY--";
+	      // Prepare bottom of mhtml file with image data
+	      var mhtmlBottom = "\n";
+	      for (var i = 0; i < images.length; i++) {
+		  mhtmlBottom += "--NEXT.ITEM-BOUNDARY\n";
+		  mhtmlBottom += "Content-Location: " + images[i].location + "\n";
+		  mhtmlBottom += "Content-Type: " + images[i].type + "\n";
+		  mhtmlBottom += "Content-Transfer-Encoding: " + images[i].encoding + "\n\n";
+		  mhtmlBottom += images[i].data + "\n\n";
+	      }
+	      mhtmlBottom += "--NEXT.ITEM-BOUNDARY--";
 
-            //TODO: load css from included stylesheet
-            var styles = $('.mine').html();
-            var styles = 'span.i{font-style:italic;}*{font-family:arial, sans-serif;}'
+	      //TODO: load css from included stylesheet
+	      var styles = $('.mine').html();
+	      var styles = 'span.i{font-style:italic;}*{font-family:arial, sans-serif;}'
 
-            // Aggregate parts of the file together
-            var fileContent = static.mhtml.top.replace("_html_", static.mhtml.head.replace("_styles_", styles) + static.mhtml.body.replace("_body_", markup.html())) + mhtmlBottom;
+	      // Aggregate parts of the file together
+	      var fileContent = static.mhtml.top.replace("_html_", static.mhtml.head.replace("_styles_", styles) + static.mhtml.body.replace("_body_", markup.html())) + mhtmlBottom;
 
-            // Create a Blob with the file contents
-            var blob = new Blob([fileContent], {
-                type: "application/msword;charset=utf-8"
-            });
-            saveAs(blob, fileName + ".doc");
-        };
-    })(jQuery);
-} else {
-    if (typeof jQuery === "undefined") {
-        console.error("jQuery Word Export: missing dependency (jQuery)");
-    }
-    if (typeof saveAs === "undefined") {
-        console.error("jQuery Word Export: missing dependency (FileSaver.js)");
-    }
-}</script>
+	      // Create a Blob with the file contents
+	      var blob = new Blob([fileContent], {
+		  type: "application/msword;charset=utf-8"
+	      });
+	      saveAs(blob, fileName + ".doc");
+	  };
+      })(jQuery);
+      } else {
+	  if (typeof jQuery === "undefined") {
+	      console.error("jQuery Word Export: missing dependency (jQuery)");
+	  }
+	  if (typeof saveAs === "undefined") {
+	      console.error("jQuery Word Export: missing dependency (FileSaver.js)");
+	  }
+      }
+    </script>
     <script type="text/javascript">
     var bib = function(){
       
@@ -1556,11 +1557,9 @@ if (typeof module !== "undefined" && module.exports) {
 	else return false
       }
       
-      function check2(vari) {
+      function check2(v) {
 	var res = false;
-	if (vari!=undefined&&vari!=null&&isNaN(vari)) {
-	  res = true
-	}
+	if (v!=undefined&&v!=null&&isNaN(v)) res = true
 	return res;
       }
       
@@ -1655,7 +1654,8 @@ if (typeof module !== "undefined" && module.exports) {
 		BibTeX:'BibTeX',
 		Vancouver: 'Bronvermelding',
 		JSON:'JSON',
-		EckartAPA:'APA-stijl'
+		EckartAPA:'APA-stijl',
+		Harvard:'Bronvermelding_in_Harvardstijl'
 	      }
 	},
 	{
@@ -1665,18 +1665,19 @@ if (typeof module !== "undefined" && module.exports) {
 		BibTeX:'BibTeX',
 		Vancouver: 'Vancouver_system',
 		JSON:'JSON',
-		EckartAPA:'APA_style'
+		EckartAPA:'APA_style',
+		Harvard:'Parenthetical_referencing'
 	      }
 	}
       ];
     
-      // Defining standard settings
+      // Defining standard settings. Well, they are now defined in one of the last lines...
     
       var formatstyle = optionformat;
       var lan = optionlan;
       var type4 = optiontype;
     
-      // Some basic jQuery
+      // Some basic jQuery for style...
       
       var currentTime = new Date();
       $('.year').attr('max',currentTime.getFullYear());
@@ -1687,23 +1688,6 @@ if (typeof module !== "undefined" && module.exports) {
       document.title = words[3][lan];
       
 //       $('.wikiextract').before('<i class="fa fa-wikipedia-w"></i>:');
-      
-      /*$('.author, .red, .place').change(function(){
-	if ($(this).val()!=null&&$(this).val()!=undefined&&$(this).val()!='') {
-	  $(this).after('<input class="' + $(this).attr('class') + ' new" placeholder="bv. \'Jan van der Linden\'" type="text"></input>');
-	  $('.author.new, .red.new, .place.new').change(function(){
-	    if ($(this).val()!=null&&$(this).val()!=undefined&&$(this).val()!='') {
-	      $(this).after('<input class="' + $(this).attr('class') + '" placeholder="bv. \'Jan van der Linden\'" type="text"></input>');
-	    }
-	    else if ($(this).val()==null||$(this).val()==undefined||$(this).val()=='') {
-	      $(this).next().remove()
-	    }
-	  });
-	}
-	else if ($(this).val()==null||$(this).val()==undefined||$(this).val()=='') {
-	  $(this).next().remove()
-	}
-      });/**/
       
       /*$('.container:not(.invisible) .wikiheader').click(function(){
       if (!$('.container:not(.invisible) .wikipedia').hasClass('wikiactive')) {
@@ -1743,13 +1727,13 @@ if (typeof module !== "undefined" && module.exports) {
 	$(elemclass3).addClass('active');
       }     
       
-      // The really difficult name formatter
+      // The really complex name formatter
     
       function name(str, type) {
 	var res = '';						// Sets result to empty string
 	function name1(amp) {
 	  if (Array.isArray(str)) {				// Checks if array (multiple names)
-	  var b = '';
+	  var b = '';                                           // Set b to append to res (result)
 	  for (i=0;i<str.length;++i) {				// Loops trough every full name
 	    if (str.indexOf(',')>0) {b+=str}else{		// Checks if name isn't already formatted (and appends name to res if it is)
 	    var a = str[i].replace(/-/g,' ').split(' ');	// Splits each full name into names (e.g. 'Jan', 'van', etc.)
@@ -1758,7 +1742,7 @@ if (typeof module !== "undefined" && module.exports) {
 	      if (a[j][0] === a[j][0].toUpperCase()) {		// Checks if first letter is capital
 		b+=' ' + a[j][0] + '.';				// Appends initials to b
 	      }
-	      else {
+	      else {                                            // Else: the name is considered a 'voorvoegsel'
 		b+=' ' + a[j];					// Appends 'voorvoegsels' to b
 	      }
 	    };}
@@ -1773,15 +1757,15 @@ if (typeof module !== "undefined" && module.exports) {
 	  }
 	  else if (typeof str === 'string') {			// Checks if string (one name)
 	    if (str.indexOf(',')>0) {res+=str}			// Checks if name isn't already formatted (and appends name to res if it is)
-	    else{
-	    var b = '';
+	    else{                                               // If it isn't, format it
+	    var b = '';                                         // Set b to append to res (result)
 	    var a = str.replace(/-/g,' ').split(' ');		// Splits each full name into names (e.g. 'Jan', 'van', etc.)
 	    b+=a[(a.length-1)] + ',';				// Adds last name to b
 	    for (j=0;j<(a.length-1);++j) {  			// Loops trough every name
 	      if (a[j][0] === a[j][0].toUpperCase()) {		// Checks if first letter is capital
 		b+=' ' + a[j][0] + '.';				// Appends initials to b
 	      }
-	      else {
+	      else {                                            // Else: the name is considered a 'voorvoegsel'
 		b+=' ' + a[j];					// Appends 'voorvoegsels' to b
 	      }
 	    };
@@ -1791,10 +1775,10 @@ if (typeof module !== "undefined" && module.exports) {
 	}
 	function name2() {
 	  if (Array.isArray(str)) {				// Checks if array (multiple names)
-	  var b = '';
+	  var b = '';                                           // Set b to append to res (result)
 	  for (i=0;i<str.length;++i) {				// Loops trough every full name
 	    if (str.indexOf(',')>0) {b+=str}			// Checks if name isn't already formatted (and appends name to res if it is)
-	    else{
+	    else{                                               // If it isn't, format it
 	    var f = '';						// Sets f to empty string
 	    var l = '';						// Sets l to empty string
 	    var a = str[i].replace(/-/g,' ').split(' ');	// Splits each full name into names (e.g. 'Jan', 'van', etc.)
@@ -1802,7 +1786,7 @@ if (typeof module !== "undefined" && module.exports) {
 	      if (a[j][0] === a[j][0].toUpperCase()) {		// Checks if first letter is capital
 		f+=a[j][0];					// Appends initials to b
 	      }
-	      else {
+	      else {                                            // Else: the name is considered a 'voorvoegsel'
 		l+=a[j] + ' ';					// Appends 'voorvoegsels' to l (last name)
 	      }
 	    };
@@ -1817,8 +1801,8 @@ if (typeof module !== "undefined" && module.exports) {
 	  }
 	  else if (typeof str === 'string') {			// Checks if string (one name)
 	    if (str.indexOf(',')>0) {b+=str}			// Checks if name isn't already formatted (and appends name to res if it is)
-	    else{
-	    var b = '';
+	    else{                                               // If it isn't, format it
+	    var b = '';                                         // Set b to append to res (result)
 	    var f = '';						// Sets f to empty string
 	    var l = '';						// Sets l to empty string
 	    var a = str.replace(/-/g,' ').split(' ');		// Splits each full name into names (e.g. 'Jan', 'van', etc.)
@@ -1826,7 +1810,7 @@ if (typeof module !== "undefined" && module.exports) {
 	      if (a[j][0] === a[j][0].toUpperCase()) {		// Checks if first letter is capital
 		f+=a[j][0];					// Appends initials to b
 	      }
-	      else {
+	      else {                                            // Else: the name is considered a 'voorvoegsel'
 		l+=a[j] + ' ';					// Appends 'voorvoegsels' to l (last name)
 	      }
 	    };
@@ -1835,6 +1819,9 @@ if (typeof module !== "undefined" && module.exports) {
 	    res+=b						// Appends b (formatted name) to res (result)
 	    }
 	  };
+	}
+	function name3() {
+	  return true
 	}
 	if (type =='APA') {
 	  name1(', &amp; ')
@@ -1858,7 +1845,7 @@ if (typeof module !== "undefined" && module.exports) {
       
       // Basic function: copy
       
-      CopyToClipboard = function(text, fallback){
+      function CopyToClipboard(text, fallback){
 	var fb = function () {
 	  $t.remove();
 	  if (fallback !== undefined && fallback) {
@@ -2007,12 +1994,10 @@ if (typeof module !== "undefined" && module.exports) {
       }
 
       function Popup(data,title,style) {
-	  var mywindow = window.open('', title, 'height='+window.width+',width='+window.height+'left=0,top=0');
-	  mywindow.document.write('<html><head><title>'+title+'</title>');
-	  mywindow.document.write('<style>'+style+'</style>');
-	  mywindow.document.write('</head><body >');
-	  mywindow.document.write(data);
-	  mywindow.document.write('</body></html>');
+	  var h=0 /*window.height*/, w=0 /*window.width*/, t=0, l=0;
+	  var mywindow = window.open('', title, 'height='+h+',width='+w+'left='+l+',top='+t);
+	  var txt = '<html><head><title>'+title+'</title><style>'+style+'</style></head><body>'+data+'</body></html>';
+	  mywindow.document.write(txt);
 
 	  mywindow.document.close();
 	  mywindow.focus();
@@ -2231,7 +2216,6 @@ if (typeof module !== "undefined" && module.exports) {
 	  var months = ['January','February','March','April','May','June','July','August','September','October','November','December']
 	}
 	if(check2(date.from)&&check2(date.to)){if((date.from.length!=0&&date.to.length!=0)&&date.from!=date.to) {
-	  console.log(date.to.length)
 	  if (date.from[1]!=date.to[1]) {
 	    if (lan == 'nl' || lan == 'en') {res += date.from[0].toString()+' '+months[(date.from[1]-1)].toLowerCase()+' '+date.from[2].toString()+' - '+date.to[0].toString() +' '+ months[(date.to[1]-1)].toLowerCase() +' '+ date.to[2].toString()}
 	  }
@@ -2261,10 +2245,7 @@ if (typeof module !== "undefined" && module.exports) {
 	  arr.push(src.author);
 	}
 	if (Array.isArray(src.red)) {
-	  for (m=0;m<src.red.length;++m) {
-	    var ma = m + arr.length;
-	    arr[ma] = src.red[m];
-	  };
+	  arr=arr.concat(src.red)
 	}
 	else if (typeof src.red === 'string') {
 	  arr.push(src.red);
@@ -2278,6 +2259,7 @@ if (typeof module !== "undefined" && module.exports) {
     
       function htmlformatter(src, style, lan) {
 	var res = /*src.type.replace(src.type[0], src.type[0].toUpperCase()) + ': '*/ '' ;
+	
 	// APA-style bibliography in HTML
 	if (style == 'APA' || style == 'EckartAPA') {
 	res += '<p>'
@@ -2513,7 +2495,7 @@ if (typeof module !== "undefined" && module.exports) {
    	
    	// Vanoucer-style bibliography in HTML
    	else if (style == 'Vancouver') {
-   	res += '<p>'
+   	res += '<p>';
 	var word = [];
 	for (t=0;t<words.length;++t) {
 	  word[t] = words[t][lan]
@@ -2681,21 +2663,27 @@ if (typeof module !== "undefined" && module.exports) {
 	    res += 'misc';
 	  }
 	  res += '{';
-	  if (src.author != null && src.author != undefined) { res += name(src.author,'APA').split(',')[0].toLowerCase(); };
-	  if (src.year != null && src.year != undefined) { res += src.year.toString(); };
-	  if (src.title != null && src.title != undefined) { res += src.title.split(' ')[0].toLowerCase(); };
-	  res += ',</p>'
-	  var arr = []
+	  var arr = [];
+	  // Title and authors
 	  if (src.title != null && src.title != undefined) { arr[arr.length] = 'title={{'+src.title+'}}'; };
 	  if (src.author != null && src.author != undefined) { arr[arr.length] = 'author={'+name(src.author, 'BibTeX')+'}'; };
-	  if (src.newspaper != null && src.newspaper != undefined) { arr[arr.length] = 'journal={'+src.newspaper+'}'; };
+	  if (src.red != null && src.red != undefined) { arr[arr.length] = 'editor={'+name(src.red, 'BibTeX')+'}'; };
+	  // Number of thing
+	  if (src.print != null && src.print != undefined) { arr[arr.length] = 'edition={'+name(src.print, 'BibTeX')+'}'; };
 	  if (src.volume != null && src.volume != undefined) { arr[arr.length] = 'volume={'+src.volume+'}'; };
 	  if (src.number != null && src.number != undefined) { arr[arr.length] = 'number={'+src.number+'}'; };
 	  if (src.pages != null && src.pages != undefined) { arr[arr.length] = 'pages={'+src.pages[0]+'--'+src.pages[1]+'}'; };
+	  // Publication dates
 	  if (src.year != null && src.year != undefined) { arr[arr.length] = 'year={'+src.year.toString()+'}'; };
+	  if (check3(src.pubdate)) {if (check3(src.pubdate[1])) { arr[arr.length] = 'year={'+src.pubdate[1].toString()+'}'; }};
+	  // URL
 	  if (src.url != null && src.url != undefined) { arr[arr.length] = 'url={https://'+src.url.replace('https://','').replace('http://','')+'}';
 	    if (src.date!= null && src.date != undefined) { arr[arr.length] = 'note={[Online; accesed '+date(src.date,'bx')+']}' }
 	  };
+	  // Publisher
+	  if (src.newspaper != null && src.newspaper != undefined) { arr[arr.length] = 'journal={'+src.newspaper+'}'; };
+	  if (check3(src.con)) {if (check3(src.con.org)) { arr[arr.length] = 'organization={'+src.con.org+'}'; }};
+	  if (src.place != null && src.place != undefined) { arr[arr.length] = 'address={'+src.place+'}'; };
 	  if (src.publisher != null && src.publisher != undefined) { arr[arr.length] = 'publisher={'+src.publisher+'}'; };
 	  res += arrToStr(arr,'<p class="indent1">',',</p>');
 	  res += '<p>}</p></div>'
@@ -2705,18 +2693,19 @@ if (typeof module !== "undefined" && module.exports) {
    	else if (style == 'JSON') {
 	  var obj = src;
 	  var string = [];
-	  if (typeof(obj) == "object" && (obj.join == undefined)) {
-	    string.push("<div class=\"nomargin\"><p>{</p>");
+	  if (typeof(obj) == 'object' && (obj.join == undefined)) {
+	    string.push('<div class="nomargin"><p>{</p>');
 	    for (prop in obj) {
-	      string.push('<p class="indent1">',prop, ": ", objToStr(obj[prop]), ",</p>");
+	      string.push('<p class="indent1">',prop, ": ", objToStr(obj[prop]), ',</p>');
 	    };
-	    string.push("<p>}</p></div>");
+	    string.push('<p>}</p></div>');
 	  }
 	  else {
 	    string.push(JSON.stringify(obj))
 	  }
-	  return string.join("")
+	  return string.join('')
    	}
+	
 	return res;
       };
             
@@ -2742,10 +2731,10 @@ if (typeof module !== "undefined" && module.exports) {
       function update(type) {
 	var z = '.container:not(.invisible) ';
 	draftsrc.type = type;
-	if($(z+'.chapauthor').val()!=''){draftsrc.chapterauthor=[];$(z+'.chapauthor').each(function(){draftsrc.chapterauthor.push($(this).val())})}
-	if($(z+'.author').val()!=''){draftsrc.author=[];$(z+'.author').each(function(){draftsrc.author.push($(this).val())})}
+	if($(z+'.chapauthor').val()!=''){draftsrc.chapterauthor=[];$(z+'.chapauthor').each(function(){if ($(this).val()!='') draftsrc.chapterauthor.push($(this).val())})}
+	if($(z+'.author').val()!=''){draftsrc.author=[];$(z+'.author').each(function(){if ($(this).val()!='') draftsrc.author.push($(this).val())});}
 	if($(z+'.chapter').val()!=''){draftsrc.chapter=$(z+'.chapter').val()}
-	if($(z+'.red').val()!=''){draftsrc.red=[];$(z+'.red').each(function(){draftsrc.red.push($(this).val())})}
+	if($(z+'.red').val()!=''){draftsrc.red=[];$(z+'.red').each(function(){if ($(this).val()!='') draftsrc.red.push($(this).val())})}
 	if($(z+'.pubdate').val()!=''){draftsrc.pubdate.from=dateInputOutput($(z+'.pubdate').val())}
 	if($(z+'.date').val()!=''){draftsrc.date.from=dateInputOutput($(z+'.date').val())}
 	if($(z+'.condate.from').val()!=''){draftsrc.date.from=dateInputOutput($(z+'.condate.from').val())}
@@ -2761,7 +2750,7 @@ if (typeof module !== "undefined" && module.exports) {
 	if($(z+'.concountry').val()!=''){draftsrc.con.country=$(z+'.concountry').val()}
 	if($(z+'.pages.from').val()!=NaN&&$(z+'.pages.to').val()!=NaN){draftsrc.pages[0]=$(z+'.pages.from').val();draftsrc.pages[1]=$(z+'.pages.to').val()}
 	if($(z+'.print').val()!=''){draftsrc.print=$(z+'.print').val()}
-	if($(z+'.place').val()!=''){draftsrc.place=[];$(z+'.place').each(function(){draftsrc.place.push($(this).val())})}
+	if($(z+'.place').val()!=''){draftsrc.place=[];$(z+'.place').each(function(){if ($(this).val()!='') draftsrc.place.push($(this).val())})}
 	if($(z+'.publisher').val()!=''){draftsrc.publisher=$(z+'.publisher').val()}
 	if($(z+'.url').val()!=''){draftsrc.url=$(z+'.url').val()}
 	// For even more testing
@@ -2778,7 +2767,7 @@ if (typeof module !== "undefined" && module.exports) {
 	var title = url.split("/");
 	title = title[title.length - 1];
 	
-	// If wikipedia-article doesn't exist, 
+	// If wikipedia-article doesn't exist, warn 'bout that
 	var pre = '';
 	if (title == 'Bronvermelding') {
 	  pre = '<p class="warning"><i class="fa fa-exclamation-triangle"></i> '+words[9][lan]+'</p>'
@@ -2795,9 +2784,25 @@ if (typeof module !== "undefined" && module.exports) {
       
       wiki();
       
+      /**/function multNam(elm) {
+	if ($(elm).val()!=''&&$(elm).last().val()!='') $(elm).after($(elm).clone(false).val(''));
+	else if ($(elm).val()===''&&$(elm).next().val()==='') $(elm).next().remove()
+	else if ($(elm).val()===''&&$(elm).next().val()!='') $(elm).remove()
+	$('.container:not(.invisible) .inputtypeinput input, .container:not(.invisible) .inputtypeinput select:not(.type)').unbind('change');
+	$('.container:not(.invisible) .inputtypeinput input, .container:not(.invisible) .inputtypeinput select:not(.type)').change(function(){
+	  update(type4);
+	});
+	$('.author, .red, .place').change(function(){
+	  multNam(this);
+	});
+      };
+      
+      $('.author, .red, .place').change(function(){
+	multNam(this);
+      });/**/
+      
       $('.options>a').click(function(){
 	lan = $(this).attr('class');
-	console.log(lan)
 	var elemclass4 = '.container.'+lan;
 	$('.container').addClass('invisible');
 	$(elemclass4).removeClass('invisible');
