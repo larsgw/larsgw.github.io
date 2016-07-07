@@ -4,6 +4,7 @@
     <title>Lars Willighagen</title>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <link href="https://fonts.googleapis.com/icon?family=Roboto" rel="stylesheet">
+    <link rel="shortcut icon" href="https://larsgw.github.io/favicon.ico"/>
     <style>
       * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
     
@@ -150,6 +151,8 @@
       
       body > main article > section section        { padding-left:1em; }
       body > main article > section section a      { color:inherit; }
+      body > main article > section section>a      { float:left; }
+      body > main article > section section>a + a  { clear:both; }
       body > main article > section section h3     { margin-left:-.855em; }
       body > main article > section section img    { width:100%;box-shadow:-1px 1px 3px rgba(0,0,0,.4),1px 1px 3px rgba(0,0,0,.4);margin-bottom:5px; }
       body > main article > section section figure { width:calc(100% - 1em);margin:0 0 20px 0;font-size:10px; }
@@ -177,6 +180,12 @@
       ::-webkit-scrollbar-track:hover { background: transparent; }
       ::-webkit-scrollbar-track:active { background: transparent; }
       ::-webkit-scrollbar-corner { background: transparent; }
+      
+      body::-webkit-scrollbar-thumb { border-color:#eceff1; }
+      body::-webkit-scrollbar-track { background: #eceff1; }
+      body::-webkit-scrollbar-track:hover { background: #eceff1; }
+      body::-webkit-scrollbar-track:active { background: #eceff1; }
+      body::-webkit-scrollbar-corner { background: #eceff1; }
     </style>
   </head>
   <body class="loading">
@@ -197,7 +206,7 @@
       <aside>
 	<h2>Navigation</h2>
 	<nav><ul><li><a href="#">Home</a></li></ul></nav>
-	<h2>Social Media</h2>
+	<h2>Links</h2>
 	<ul>
 	  <li><strong>Twitter:</strong> <a href="https://twitter.com/larswillighagen">@larswillighagen</a></li>
 	  <li><strong>GitHub:</strong> <a href="https://github.com/larsgw">larsgw</a></li>
@@ -230,6 +239,16 @@
 	sections:
 	  [
 	    {
+	      title:'ContentMine Fellowship',
+	      link:['http://contentmine.org/','https://github.com/larsgw/contentmine-fellowship'],
+	      img:'img/slider_img-07.png',
+	      text:[
+		'',
+		'<a href="https://github.com/larsgw/contentmine-fellowship">Repository</a><br>'+
+		'<a href="http://contentmine.org/">ContentMine website</a>'
+	      ]
+	    },
+	    {
 	      title:'Citation.js',
 	      link:['https://larsgw.github.io/citation.js/','https://github.com/larsgw/citation.js/'],
 	      img:'img/slider_img-02.png',
@@ -238,6 +257,16 @@
 		'<a href="https://github.com/larsgw/citation.js">Repository</a><br>'+
 		'<a href="https://larsgw.github.io/citation.js/demo.html">Demo</a><br>'+
 		'<a href="https://larsgw.github.io/citation.js/">jQuery Plugin Demo</a>'
+	      ]
+	    },
+	    {
+	      title:'InlinEdit',
+	      link:['https://larsgw.github.io/InlinEdit/','https://github.com/larsgw/inlinedit/'],
+	      img:'img/slider_img-06.png',
+	      text:[
+		'Small plugin for editing markdown-like rich text. Not perfect. Will be used for Webapp Presentations.',
+		'<a href="https://github.com/larsgw/InlinEdit">Repository</a><br>'+
+		'<a href="https://larsgw.github.io/InlinEdit/">Demo</a>'
 	      ]
 	    },
 	    {
