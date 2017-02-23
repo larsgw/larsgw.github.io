@@ -9,56 +9,63 @@
     return (v.title || '').toLowerCase().replace(/\.|\s/g,'')
   }
   
+  function getSect (v, level, attr) {
+    return '\
+      <section ' + attr + '>\
+        <h' + level + '>' + v.title + '</h' + level + '>\
+        ' + (v.img ?
+          '<figure>\
+            <img style="background-image:url(' + v.img + ')" />\
+            <figcaption>' + (v.caption || '') + '</figcaption>\
+          </figure>'
+        : '') +
+        (v.text || []).map(getPara).join('') + '\
+      </section>\
+    '
+  }
+  
+  function getSub (v) {
+    return getSect(v, 4)
+  }
+  
   function getPara (v) {
-    return '<p>' + v + '</p>'
+    return typeof v === 'string' ? '<p>' + v + '</p>' : getSub(v)
   }
   
   var parseArticles = function (articles) {
-    $.each(articles,function(key, v){
-      var b= key === 'projects'
+    $.each(articles, function(key, group){
+      $('body > main article').append(getSect(group, 2))
       
-      $('body > main article').append('\
-        <section id="' + getID(v) + '"><h2>' + v.title + '</h2>' +
-          (v.img ?
-            '<figure>\
-              <img src="' + v.img + '" />\
-              <figcaption>' + (v.caption || '') + '</figcaption>\
-            </figure>'
-          : '') +
-          (v.text || []).map(getPara).join('') +
-        '</section>\
-      ')
+      $('body > main > aside > nav > ul').append(group.title ?
+        '<li><a href="#' + getID(group) + '">' + group.title + '</a><ul></ul></li>' : '')
       
-      $('body > main > aside > nav > ul').append(v.title ?
-        '<li><a href="#' + getID(v) + '">' + v.title + '</a><ul></ul></li>' : '')
-      
-      $.each(v.sections, function (i,v) {
-        if (b) {
+      $.each(group.sections, function (index, section) {
+        if (key === 'projects') {
           $('.slides').append('\
-            <div style="background-position:' + v.pos + ';background-image:url(\'' + v.img + '\');"\
-                class="slide' + (i === 0 ? ' active' : '') + '">\
+            <div class="slide' + (index === 0 ? ' active' : '') + '" style="\
+              background-position:' + section.pos + ';\
+              background-image:url(\'' + section.img + '\');\
+            ">\
               <header>\
-                <a href="#' + getID(v) + '"><h4>' + (v.title || '') + '</h4></a>\
-                <p>' + getLinks(v) + '</p>\
+                <a href="#' + getID(section) + '"><h4>' + section.title + '</h4></a>\
+                <p>' + getLinks(section) + '</p>\
               </header>\
             </div>\
           ')
-          $('.slider-dots').append('<li class="dot' + (i === 0 ? ' active' : '') + '"><div></div></li>')
+          $('.slider-dots').append('\
+            <li class="dot' + (index === 0 ? ' active' : '') + '">\
+              <div></div>\
+            </li>\
+          ')
         }
         
-        $('body > main article > section').last().append('\
-          <section ' + (testing && i === 0 ? 'class="nfld" ' : '') + 'id="' + getID(v) + '"><h3>' + v.title + '</h3>' +
-            (v.img ?
-              '<figure>\
-                <img src="' + v.img + '" />\
-                <figcaption>' + (v.caption || '') + '</figcaption>\
-              </figure>'
-            : '') +
-            (v.text || []).map(getPara).join('') +
-          '</section>\
-        ')
+        $('body > main article > section').last().append(getSect(section, 3,
+          (testing && index === 0 ? 'class="nfld" ' : '') + 'id="' + getID(section) + '"'
+        ))
         
-        $('body > main > aside > nav > ul > li').last().find('ul').append(v.title ? '<li><a href="#' + getID(v) + '">' + v.title + '</a></li>' : '')
+        $('body > main > aside > nav > ul > li').last().find('ul').append(
+          '<li><a href="#' + getID(section) + '">' + section.title + '</a></li>'
+        )
       })
       
     })
@@ -151,10 +158,12 @@
   })
 
   $(window).on('load',function () {
-    $('body').removeClass('loading');
+    // Setup
+    $('body').removeClass('loading')
     
     parseArticles(articles)
     
+    // Slider
     $('.slides').css('width', (articles['projects'].sections.length) + '01%')
 
     $('.slide-next').click(nextSlide)
@@ -175,6 +184,12 @@
     $('.slider h4, nav a').click(function () {
       $('body > main article section section').removeClass('flod nfld')
     })
+    
+//     $(window).on('hashchange', function () {
+//       $(':target').removeClass('fold nfld').addClass('nfld')
+//     })
+//     
+//     $(window).trigger('hashchange')
     
     $('body > main article section section h3').click(function () {
       var t = $(this).parent(),
