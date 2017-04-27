@@ -1,0 +1,29 @@
+<svm name="Wireframe Figure">
+  <group name="ball" y="-110">
+    <prism color="white" sides="20" radius="60" height="7" ry="-45" hollow="1" />
+    <prism color="white" sides="20" radius="59" height="7" ry="135" hollow="1" />
+    
+    <prism color="white" sides="20" radius="60" height="7" ry="90" rz="-90" hollow="1" />
+    <prism color="white" sides="20" radius="59" height="7" ry="90" rz="90" hollow="1" />
+    
+    <prism color="white" sides="20" radius="60" height="7" rx="-90" ry="180" hollow="1" />
+    <prism color="white" sides="20" radius="59" height="7" rx="-90" hollow="1" />
+  </group>
+  
+  <group name="cube" y="50">
+    <group name="edges">
+      <concave color="white" height="100" path="M0,0 5,0 5,5 0,5ZM100,0 100,5 95,5 95,0ZM100,100 95,100 95,95 100,95ZM0,100 0,95 5,95 5,100Z"/>
+      <concave color="white" x="100" y="100" z="100" rz="180" rx="-90" height="100" path="M0,0 5,0 5,5 0,5ZM100,0 100,5 95,5 95,0ZM100,100 95,100 95,95 100,95ZM0,100 0,95 5,95 5,100Z"/>
+      <concave color="white" y="100" rz="-90" height="100" path="M0,0 5,0 5,5 0,5ZM100,0 100,5 95,5 95,0ZM100,100 95,100 95,95 100,95ZM0,100 0,95 5,95 5,100Z"/>
+    </group>
+    
+    <group name="planes">
+      <concave color="white" height="5" path="M0,5 0,0 5,0 100,95 100,100 95,100ZM95,0 100,0 100,5 5,100 0,100 95,0Z"/>
+      <concave color="white" y="-95" height="5" path="M0,5 0,0 5,0 100,95 100,100 95,100ZM95,0 100,0 100,5 5,100 0,100 95,0Z"/>
+      <concave color="white" rx="-90" rz="180" x="100" y="5" z="5" height="5" path="M0,5 0,0 5,0 100,95 100,100 95,100ZM95,0 100,0 100,5 5,100 0,100 95,0Z"/>
+      <concave color="white" rx="-90" ry="180" x="100" y="5" z="100" height="5" path="M0,5 0,0 5,0 100,95 100,100 95,100ZM95,0 100,0 100,5 5,100 0,100 95,0Z"/>
+      <concave color="white" rz="-90" y="5" height="5" path="M0,5 0,0 5,0 100,95 100,100 95,100ZM95,0 100,0 100,5 5,100 0,100 95,0Z"/>
+      <concave color="white" rz="-90" x="95" y="5" height="5" path="M0,5 0,0 5,0 100,95 100,100 95,100ZM95,0 100,0 100,5 5,100 0,100 95,0Z"/>
+    </group>
+  </group>
+</svm>

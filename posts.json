@@ -1,0 +1,181 @@
+{
+  "programmes": {
+    "title": "Programmes",
+    "text": [
+      "In the last few years, I have participated in the following programmes:"
+    ],
+    "sections": [
+      {
+        "title": "ContentMine Fellowship",
+        "link": [
+          "http://contentmine.org/",
+          "https://github.com/larsgw/contentmine-fellowship"
+        ],
+        "img": "img/slider_img-07.png",
+        "text": [
+          "<a href='http://contentmine.org'>ContentMine</a> is a project aiming to \"demonstrate the usefulness of content mining and to provide tools and services to others.\" I participated in the ContentMine fellowships in 2016.",
+          "<a href='https://github.com/larsgw/contentmine-fellowship'>Repository</a><br><a href='http://contentmine.org/fellows'>ContentMine Fellows page</a><br><a href='https://larsgw.blogspot.nl/2016/08/contentmine-fellowship.html'>Blogpost</a>",
+          {
+            "title": "Cardlists",
+            "img": "img/slider_img-08.png",
+            "text": [
+              [
+                "<a href='https://github.com/larsgw/ctj-cardlists'>Repository</a>",
+                "<a href='https://larsgw.github.io/ctj-cardlists'>Demo</a>"
+              ]
+            ]
+          },
+          {
+            "title": "Factvis",
+            "img": "img/slider_img-09.jpg",
+            "text": [
+              "Visualizing <a href='http://contentmine.org'>ContentMine</a> facts (port of <a href='https://github.com/tarrow'>tarrow</a>)",
+              [
+                "<a href='https://github.com/larsgw/factvis'>Repository</a>",
+                "<a href='https://larsgw.github.io/factvis'>Demo</a>"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Technasium",
+        "pos": "50% 50%",
+        "img": "https://lh3.googleusercontent.com/PQahXbpjzJ0JXuqICaV9oXe2Rifp9uMdm67H1Tl6DSbS956EjdZXzS5fcmCJULvo0bPPguVgB02T1Tz3ULzq-XDacZDUAvKStGjQwNS__kN6gPq7habTpfDE6xWteRQdZJxA1DIbZ56rI_dpOmjqgo8bhi2c9rLdcKHspcW3ITBI8k8k_HLXBlr7WZohWOKfgfnLBz_L6BdNJnt7UhTFwjACQqALM_W_gFM8gF347msAs_mVYqZu_vMzmQdh6fRNyTJtc3pGs8Uh4-flr6YUroE1gSmLdCg4jQYXNjLvdGb7iuwcBVufmnHQ_hyF5MKl6owdL15j6j8RRiZtPL8wSxmirZc0Fy1vdDZ3vpD6PYxPzUdmJFqXbRwzvWF5wRTSeWMgj26Td2ivVuTS8Gx9KAi_xQ8aJ1ZvHg7Kjwsfib9FaXswV5Omd6Aw6wmCBfqJONtAZ5iW0U8yfKt9fpku_xlsguaA4j91kzV9O_wKw-VWz--zwnrvIt8rmLiR-ypHYOmfWxCoLPFkfZl_bRM2mDG0ewLUUpdrjNIzGHwGNYRaxJDA7sQIg8ocG6c2JpN7_38vpJdPvo1WuU6kZGk_ABpqfeB8dSgMK38cVfHZ7JGovHYhp0YsjREuZLPEDL98c9POp04yZutFhlG-7WVb22noc3t2PR_YbUj3KSOxYA=w956-h637-no",
+        "text": [
+          "<a href='http://technasium.nl'>Technasium</a> is a Dutch programme to introduce students from the age 13-18 to both technical studies and trade and industry, by facilitating students to search for projects at real-life companies, and to actually complete these projects.",
+          "I have participated in this programme for a few years now, and these are some of the projects our team has done.",
+          "Our team: me, <a href='https://koenjjs.github.io'>Koen Smeets</a>, <a href='https://robsorb.github.io'>Rob Schellingerhout</a> and Stef Lamerichs.",
+          {
+            "title": "Office of the future",
+            "img": "https://lh3.googleusercontent.com/PQahXbpjzJ0JXuqICaV9oXe2Rifp9uMdm67H1Tl6DSbS956EjdZXzS5fcmCJULvo0bPPguVgB02T1Tz3ULzq-XDacZDUAvKStGjQwNS__kN6gPq7habTpfDE6xWteRQdZJxA1DIbZ56rI_dpOmjqgo8bhi2c9rLdcKHspcW3ITBI8k8k_HLXBlr7WZohWOKfgfnLBz_L6BdNJnt7UhTFwjACQqALM_W_gFM8gF347msAs_mVYqZu_vMzmQdh6fRNyTJtc3pGs8Uh4-flr6YUroE1gSmLdCg4jQYXNjLvdGb7iuwcBVufmnHQ_hyF5MKl6owdL15j6j8RRiZtPL8wSxmirZc0Fy1vdDZ3vpD6PYxPzUdmJFqXbRwzvWF5wRTSeWMgj26Td2ivVuTS8Gx9KAi_xQ8aJ1ZvHg7Kjwsfib9FaXswV5Omd6Aw6wmCBfqJONtAZ5iW0U8yfKt9fpku_xlsguaA4j91kzV9O_wKw-VWz--zwnrvIt8rmLiR-ypHYOmfWxCoLPFkfZl_bRM2mDG0ewLUUpdrjNIzGHwGNYRaxJDA7sQIg8ocG6c2JpN7_38vpJdPvo1WuU6kZGk_ABpqfeB8dSgMK38cVfHZ7JGovHYhp0YsjREuZLPEDL98c9POp04yZutFhlG-7WVb22noc3t2PR_YbUj3KSOxYA=w956-h637-no",
+            "text": [
+              "Our team designed components necessary for an innovative office for <a href='https:/heijmans.nl/'>Heijmans</a>.",
+              "<a href='https://larsgw.github.io/presents/heijmans'>Presentation</a>"
+            ]
+          },
+          {
+            "title": "Mobile stage",
+            "text": [
+              "Our team designed a mobile stage for <a href='https://cke.nl/'>CKE</a>.",
+              "<a href='https://larsgw.github.io/presents/cke'>Presentation</a>"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "projects": {
+    "slider": true,
+    "title": "Projects",
+    "text": [
+      "A collection of my projects."
+    ],
+    "sections": [
+      {
+        "title": "Citation.js",
+        "link": [
+          "https://larsgw.github.io/citation.js/",
+          "https://github.com/larsgw/citation.js/"
+        ],
+        "img": "img/slider_img-02.png",
+        "text": [
+          "Citation.js converts formats like BibTeX, Wikidata JSON and BibJSON to CSL-JSON and other formats. Available as NPM module, CLI tool and browser JS library.",
+          [
+            "<a href='https://larsgw.github.io/citation.js/'>Demos</a>",
+            "<a href='https://github.com/larsgw/citation.js/'>Repository</a>",
+            "<a href='https://npmjs.com/package/citation-js/'>NPM</a>"
+          ]
+        ]
+      },
+      {
+        "title": "SVM",
+        "img": "img/svm-01.png",
+        "text": [
+          "Scalable Vector Models. SVG-like 3D-models for the web, focused on geometry. Currently converted to pure HTML. To dos: Finish specification and conversion to WebGL and A-Frame.",
+          [
+            "<a href='https://github.com/larsgw/svm'>Repository</a>",
+            "<a href='https://larsgw.github.io/svm/demo.html'>3D Demo</a>"
+          ]
+        ]
+      },
+      {
+        "title": "Web design",
+        "img": "img/slider_img-03.png",
+        "text": [
+          "I have designed several websites, including my own project sites and.",
+          {
+            "title": "egonw.github.io",
+            "link": [
+              "http://egonw.github.io/",
+              "https://github.com/egonw/egonw.github.com/"
+            ],
+            "img": "img/slider_img-01.png",
+            "text": [
+              "Some design improvements on the github.io page of Egon Willighagen",
+              "<a href='http://egonw.github.io/'>Link</a>"
+            ]
+          },
+          {
+            "title": "karinmajoor.nl",
+            "link": [
+              "http://karinmajoor.nl/"
+            ],
+            "img": "img/slider_img-03.png",
+            "text": [
+              "A small web page with AngularJS.",
+              "<a href='http://karinmajoor.nl'>Link</a>"
+            ]
+          }
+        ]
+      },
+      {
+        "title": "Presents",
+        "img": "img/slider_img-05.png",
+        "text": [
+          "JSON slideshow format and converter to HTML. Used for 3D presentations. Advantages: embeddable, compatible with all web technoligies. See also SVM.",
+          [
+            "<a href='https://larsgw.github.io/presents/brandweer'>Example</a>"
+          ],
+          {
+            "title": "Webapp Presentations",
+            "img": "img/slider_img-05.png",
+            "text": [
+              "Work in progress. A webapp where you can make your own Presents presentations and interactive slides. Together with Robin van Merle (<a href='https://twitter.com/RobinvanMerle'>@RobinvanMerle</a>).",
+              [
+                "<a href='https://goo.gl/photos/PsGiqVArZTsdMng27'>Screenshots</a>",
+                "<a href='https://jsfiddle.net/LarsGW/9eu5pmud/3/'>3D Demo</a>"
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "InlinEdit",
+        "link": [
+          "https://larsgw.github.io/InlinEdit/",
+          "https://github.com/larsgw/inlinedit/"
+        ],
+        "img": "img/slider_img-06.png",
+        "text": [
+          "Work in progress. Small plugin for editing markdown-like rich text. Will be used for Webapp Presentations. Developer API coming soon.",
+          [
+            "<a href='https://github.com/larsgw/InlinEdit'>Repository</a>",
+            "<a href='https://larsgw.github.io/InlinEdit/'>Demo</a>"
+          ]
+        ]
+      },
+      {
+        "title": "Bounce",
+        "link": [
+          "http://eckartcollege.nl/bounce/Bounce.html"
+        ],
+        "img": "img/slider_img-04.png",
+        "text": [
+          "A small web game with HTML, CSS, JavaScript and jQuery. On of my first programming projects, and the only game so far (although I'm planning for one soon.)",
+          "<a href='http://eckartcollege.nl/bounce/Bounce.html'>Demo</a>"
+        ]
+      }
+    ]
+  }
+}

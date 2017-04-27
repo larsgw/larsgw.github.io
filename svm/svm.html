@@ -1,0 +1,40 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <title>SVM &amp; SVM WebViewer Demo</title>
+    <link rel="stylesheet" type="text/css" href="css/style.css"/>
+  </head>
+  <body>
+    
+    <script type="text/javascript" src="js/jquery-2.2.2.min.js"></script>
+    <script type="text/javascript" src="js/jquery.mobile.custom.min.js"></script>
+    <script type="text/javascript" src="js/mousewheel.js"></script>
+    <script type="text/javascript" src="js/jquery.transit.js"></script>
+    <script type="text/javascript" src="js/webviewer.js"></script>
+    <script>
+      var boxesSelector = [
+        '[value="[data-name=\'Wireframe Figure\'] [data-name=\'ball\']"]',
+        '[value="[data-name=\'Wireframe Figure\'] [data-name=\'cube\'] [data-name=\'planes\']"]'
+      ].join()
+      
+      $(function(){
+        $.getJSON('config.json', function (data) {
+          const viewer = new WebViewer(data, {
+            css: 'css/webviewer.css',
+            method: 'html'
+          })
+          viewer.view()
+          
+          var checkBoxes = setInterval(function () {
+            var boxes = $(boxesSelector)
+            if (boxes.length) {
+              boxes.prop('checked', false)
+              boxes.change()
+              clearInterval(checkBoxes)
+            }
+          }, 10)
+        })
+      })
+    </script>
+  </body>
+</html>

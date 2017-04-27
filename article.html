@@ -1,0 +1,46 @@
+<a id="close" href="./" class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab">
+  <i class="material-icons">close</i>
+</a>
+<article class="expand">
+  <div class="mdl-card__media">
+    <img class="article-image" border="0" src="javascript:void(0)"
+        data-ng-attr-src="{{section.img}}" data-ng-attr-alt="{{section.caption}}" />
+    <figure data-ng-if="section.img">
+      <figcaption data-ng-if="section.caption">{{section.caption}}</figcaption>
+    </figure>
+  </div>
+  
+  <header class="mdl-card__title">
+    <h2 class="mdl-card__title-text">{{section.title}}</h2>
+  </header>
+  
+  <main class="mdl-card__supporting-text">
+    <div data-ng-repeat="paragraph in section.text">
+    
+      <p data-ng-if="typeOf(paragraph) === 'string'" data-ng-bind-html="paragraph"></p>
+      
+      <div data-ng-if="typeOf(paragraph) === 'array'">
+        <p data-ng-repeat="link in paragraph" data-ng-bind-html="link"></p>
+      </div>
+      
+      <div data-ng-if="typeOf(paragraph) === 'object'">
+        <div data-ng-if="paragraph.img" class="mdl-card__media">
+          <img class="article-image" border="0" src="javascript:void(0)"
+              data-ng-attr-src="{{paragraph.img}}" data-ng-attr-alt="{{paragraph.caption}}" />
+          <figure data-ng-if="paragraph.img">
+            <figcaption data-ng-if="paragraph.caption">{{paragraph.caption}}</figcaption>
+          </figure>
+        </div>
+        
+        <header class="mdl-card__title">
+          <h3 class="mdl-card__title-text">{{paragraph.title}}</h3>
+        </header>
+        
+        <div class="mdl-card__supporting-text">
+          <p data-ng-repeat="sub in paragraph.text" data-ng-bind-html="sub"></p>
+        </div>
+      </div>
+      
+    </div>
+  </main>
+</article>
