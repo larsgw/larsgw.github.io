@@ -3,7 +3,7 @@
 </a>
 <article class="expand">
   <div class="mdl-card__media">
-    <img class="article-image" border="0" src="javascript:void(0)"
+    <img class="article-image" border="0" src="empty.gif"
         data-ng-attr-src="{{section.img}}" data-ng-attr-alt="{{section.caption}}" />
     <figure data-ng-if="section.img">
       <figcaption data-ng-if="section.caption">{{section.caption}}</figcaption>
@@ -16,16 +16,18 @@
   
   <main class="mdl-card__supporting-text">
     <div data-ng-repeat="paragraph in section.text">
-    
       <p data-ng-if="typeOf(paragraph) === 'string'" data-ng-bind-html="paragraph"></p>
       
       <div data-ng-if="typeOf(paragraph) === 'array'">
-        <p data-ng-repeat="link in paragraph" data-ng-bind-html="link"></p>
+        <div data-ng-repeat="link in paragraph">
+          <a data-ng-attr-href="{{link[1]}}">{{link[0]}}</a>
+          <br>
+        </div>
       </div>
       
       <div data-ng-if="typeOf(paragraph) === 'object'">
         <div data-ng-if="paragraph.img" class="mdl-card__media">
-          <img class="article-image" border="0" src="javascript:void(0)"
+          <img class="article-image" border="0" src="empty.gif"
               data-ng-attr-src="{{paragraph.img}}" data-ng-attr-alt="{{paragraph.caption}}" />
           <figure data-ng-if="paragraph.img">
             <figcaption data-ng-if="paragraph.caption">{{paragraph.caption}}</figcaption>
@@ -37,7 +39,16 @@
         </header>
         
         <div class="mdl-card__supporting-text">
-          <p data-ng-repeat="sub in paragraph.text" data-ng-bind-html="sub"></p>
+          <div data-ng-repeat="sub in paragraph.text">
+            <p data-ng-if="typeOf(sub) === 'string'" data-ng-bind-html="sub"></p>
+            
+            <div data-ng-if="typeOf(sub) === 'array'">
+              <div data-ng-repeat="link in sub">
+                <a data-ng-attr-href="{{link[1]}}">{{link[0]}}</a>
+                <br>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       
