@@ -1,4 +1,4 @@
-// (function(){
+(function(){
   var createElement = function (tag, attr, content) {
     if (content !== undefined) {
       var elm = '<' + tag + '>' + content + '</' + tag + '>'
@@ -10,9 +10,15 @@
   }
   
   var getLinks = function (links) {
-    return links.map(function (link) {
-      return createElement('a', {href: link}, link)
-    }).join('<br>')
+    if (typeof links[0] === 'string') {
+      return links.map(function (link) {
+        return createElement('a', {href: link}, link)
+      }).join('<br>')
+    } else {
+      return createElement('p', {}, links.map(function (link) {
+        return createElement('a', {href: link[1]}, link[0])
+      }).join('<br>'))
+    }
   }
   
   var getID = function (data) {
@@ -176,7 +182,7 @@
 
   $(window).on('load',function () {
     
-    $.getJSON('posts.json', function (articles) {
+    $.getJSON('../posts.json', function (articles) {
       // Setup
       $('body').removeClass('loading')
       
@@ -223,4 +229,4 @@
     setTimeout(function () {$(window).resize()}, 100)
   })
   
-// })()
+})()
