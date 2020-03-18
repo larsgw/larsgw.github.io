@@ -1,10 +1,24 @@
 {
+  "publications" : {
+    "title": "Publications",
+    "text": [],
+    "sections": [
+      {
+        "title": "Citation.js: a format-independent, modular bibliography tool for the browser and command line",
+        "img": "img/fig-1-2x.jpg",
+        "text": [
+          "Willighagen LG. 2019. Citation.js: a format-independent, modular bibliography tool for the browser and command line. <i>PeerJ Computer Science</i> 5:e214",
+          [
+            ["DOI", "https://doi.org/10.7717/peerj-cs.214"],
+            ["Project page", "https://citation.js.org"]
+          ]
+        ]
+      }
+    ]
+  },
   "programmes": {
     "slider": true,
-    "title": "Programmes",
-    "text": [
-      "In the last few years, I have participated in the following programmes:"
-    ],
+    "title": "Experience",
     "sections": [
       {
         "title": "ContentMine Fellowship",
@@ -44,32 +58,21 @@
         ]
       },
       {
+        "title": "npm Community Leader",
+        "img": "img/npm.png",
+        "text": [
+          "Before the 2019 reorganization at npm I was Community Leader in their forum, <a href=\"https://npm.community/categories\">npm.community</a>. In that time, I made around 20 PRs to fix bugs in the existing codebase.",
+          [
+            ["Announcement", "https://npm.community/t/lars-willighagen-our-first-community-leader/4413"]
+          ]
+        ]
+      },
+      {
         "title": "Technasium",
         "pos": "50% 50%",
-        "img": "https://lh3.googleusercontent.com/PQahXbpjzJ0JXuqICaV9oXe2Rifp9uMdm67H1Tl6DSbS956EjdZXzS5fcmCJULvo0bPPguVgB02T1Tz3ULzq-XDacZDUAvKStGjQwNS__kN6gPq7habTpfDE6xWteRQdZJxA1DIbZ56rI_dpOmjqgo8bhi2c9rLdcKHspcW3ITBI8k8k_HLXBlr7WZohWOKfgfnLBz_L6BdNJnt7UhTFwjACQqALM_W_gFM8gF347msAs_mVYqZu_vMzmQdh6fRNyTJtc3pGs8Uh4-flr6YUroE1gSmLdCg4jQYXNjLvdGb7iuwcBVufmnHQ_hyF5MKl6owdL15j6j8RRiZtPL8wSxmirZc0Fy1vdDZ3vpD6PYxPzUdmJFqXbRwzvWF5wRTSeWMgj26Td2ivVuTS8Gx9KAi_xQ8aJ1ZvHg7Kjwsfib9FaXswV5Omd6Aw6wmCBfqJONtAZ5iW0U8yfKt9fpku_xlsguaA4j91kzV9O_wKw-VWz--zwnrvIt8rmLiR-ypHYOmfWxCoLPFkfZl_bRM2mDG0ewLUUpdrjNIzGHwGNYRaxJDA7sQIg8ocG6c2JpN7_38vpJdPvo1WuU6kZGk_ABpqfeB8dSgMK38cVfHZ7JGovHYhp0YsjREuZLPEDL98c9POp04yZutFhlG-7WVb22noc3t2PR_YbUj3KSOxYA=w956-h637-no",
+        "img": "img/DSC03549.jpg",
         "text": [
-          "<a href='http://technasium.nl'>Technasium</a> is a Dutch programme to introduce students from the age 13-18 to both technical studies and trade and industry, by facilitating students to search for projects at real-life companies, and to actually complete these projects.",
-          "I have participated in this programme for a few years now, and these are some of the projects our team has done.",
-          "Our team: me, <a href='https://koenjjs.github.io'>Koen Smeets</a>, <a href='https://robsorb.github.io'>Rob Schellingerhout</a> and Stef Lamerichs.",
-          {
-            "title": "Office of the future",
-            "img": "https://lh3.googleusercontent.com/PQahXbpjzJ0JXuqICaV9oXe2Rifp9uMdm67H1Tl6DSbS956EjdZXzS5fcmCJULvo0bPPguVgB02T1Tz3ULzq-XDacZDUAvKStGjQwNS__kN6gPq7habTpfDE6xWteRQdZJxA1DIbZ56rI_dpOmjqgo8bhi2c9rLdcKHspcW3ITBI8k8k_HLXBlr7WZohWOKfgfnLBz_L6BdNJnt7UhTFwjACQqALM_W_gFM8gF347msAs_mVYqZu_vMzmQdh6fRNyTJtc3pGs8Uh4-flr6YUroE1gSmLdCg4jQYXNjLvdGb7iuwcBVufmnHQ_hyF5MKl6owdL15j6j8RRiZtPL8wSxmirZc0Fy1vdDZ3vpD6PYxPzUdmJFqXbRwzvWF5wRTSeWMgj26Td2ivVuTS8Gx9KAi_xQ8aJ1ZvHg7Kjwsfib9FaXswV5Omd6Aw6wmCBfqJONtAZ5iW0U8yfKt9fpku_xlsguaA4j91kzV9O_wKw-VWz--zwnrvIt8rmLiR-ypHYOmfWxCoLPFkfZl_bRM2mDG0ewLUUpdrjNIzGHwGNYRaxJDA7sQIg8ocG6c2JpN7_38vpJdPvo1WuU6kZGk_ABpqfeB8dSgMK38cVfHZ7JGovHYhp0YsjREuZLPEDL98c9POp04yZutFhlG-7WVb22noc3t2PR_YbUj3KSOxYA=w956-h637-no",
-            "text": [
-              "Our team designed components necessary for an innovative office for <a href='https:/heijmans.nl/'>Heijmans</a>.",
-              [
-                ["Presentation", "https://larsgw.github.io/presents/heijmans"]
-              ]
-            ]
-          },
-          {
-            "title": "Mobile stage",
-            "text": [
-              "Our team designed a mobile stage for <a href='https://cke.nl/'>CKE</a>.",
-              [
-                ["Presentation", "https://larsgw.github.io/presents/cke"]
-              ]
-            ]
-          }
+          "<a href='http://technasium.nl'>Technasium</a> is a Dutch programme to introduce students from the age 13-18 to both technical studies and trade and industry, by facilitating students to search for projects at real-life companies, and to actually complete these projects."
         ]
       }
     ]
@@ -109,85 +112,22 @@
         ]
       },
       {
-        "title": "Web design",
-        "img": "img/slider_img-03.png",
+        "title": "svg-path",
+        "img": "img/svg-path.jpeg",
         "text": [
-          "I have designed several websites, including my own project sites and.",
-          {
-            "title": "egonw.github.io",
-            "link": [
-              "http://egonw.github.io/",
-              "https://github.com/egonw/egonw.github.com/"
-            ],
-            "img": "img/slider_img-01.png",
-            "text": [
-              "Some design improvements on the github.io page of Egon Willighagen",
-              [
-                ["Link", "http://egonw.github.io/"]
-              ]
-            ]
-          },
-          {
-            "title": "karinmajoor.nl",
-            "link": [
-              "http://karinmajoor.nl/"
-            ],
-            "img": "img/slider_img-03.png",
-            "text": [
-              "A small web page with AngularJS.",
-              [
-                ["Link", "http://karinmajoor.nl"]
-              ]
-            ]
-          }
-        ]
-      },
-      {
-        "title": "Presents",
-        "img": "img/slider_img-05.png",
-        "text": [
-          "JSON slideshow format and converter to HTML. Used for 3D presentations. Advantages: embeddable, compatible with all web technoligies. See also SVM.",
+          "Parse and normalise SVG Path syntax. Includes code to detangle paths, i.e. rerouting the path to avoid intersections.",
           [
-            ["Example", "https://larsgw.github.io/presents/brandweer"]
-          ],
-          {
-            "title": "Webapp Presentations",
-            "img": "img/slider_img-05.png",
-            "text": [
-              "Work in progress. A webapp where you can make your own Presents presentations and interactive slides. Together with Robin van Merle (<a href='https://twitter.com/RobinvanMerle'>@RobinvanMerle</a>).",
-              [
-                ["Screenshots", "https://goo.gl/photos/PsGiqVArZTsdMng27"],
-                ["3D Demo", "https://jsfiddle.net/LarsGW/9eu5pmud/3/"]
-              ]
-            ]
-          }
-        ]
-      },
-      {
-        "title": "InlinEdit",
-        "link": [
-          "https://larsgw.github.io/InlinEdit/",
-          "https://github.com/larsgw/inlinedit/"
-        ],
-        "img": "img/slider_img-06.png",
-        "text": [
-          "Work in progress. Small plugin for editing markdown-like rich text. Will be used for Webapp Presentations. Developer API coming soon.",
-          [
-            ["Repository", "https://github.com/larsgw/InlinEdit"],
-            ["Demo", "https://larsgw.github.io/InlinEdit/"]
+            ["Repository", "https://github.com/larsgw/svg-path"]
           ]
         ]
       },
       {
-        "title": "Bounce",
-        "link": [
-          "http://eckartcollege.nl/bounce/Bounce.html"
-        ],
-        "img": "img/slider_img-04.png",
+        "title": "sync-fetch",
+        "img": "img/sync-fetch.png",
         "text": [
-          "A small web game with HTML, CSS, JavaScript and jQuery. On of my first programming projects, and the only game so far (although I'm planning for one soon.)",
+          "Synchronous wrapper of the Fetch API.",
           [
-            ["Demo", "http://eckartcollege.nl/bounce/Bounce.html"]
+            ["Repository", "https://github.com/larsgw/sync-fetch"]
           ]
         ]
       }

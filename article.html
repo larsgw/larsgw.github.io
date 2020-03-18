@@ -26,13 +26,7 @@
       </div>
       
       <div data-ng-if="typeOf(paragraph) === 'object'">
-        <div data-ng-if="paragraph.img" class="mdl-card__media">
-          <img class="article-image" border="0" src="empty.gif"
-              data-ng-attr-src="{{paragraph.img}}" data-ng-attr-alt="{{paragraph.caption}}" />
-          <figure data-ng-if="paragraph.img">
-            <figcaption data-ng-if="paragraph.caption">{{paragraph.caption}}</figcaption>
-          </figure>
-        </div>
+        <hr>
         
         <header class="mdl-card__title">
           <h3 class="mdl-card__title-text">{{paragraph.title}}</h3>
@@ -49,6 +43,14 @@
               </div>
             </div>
           </div>
+        </div>
+        
+        <div data-ng-if="paragraph.img" class="mdl-card__media">
+          <img class="article-image" border="0" src="empty.gif"
+              data-ng-attr-src="{{paragraph.img}}" data-ng-attr-alt="{{paragraph.caption}}" />
+          <figure data-ng-if="paragraph.img">
+            <figcaption data-ng-if="paragraph.caption">{{paragraph.caption}}</figcaption>
+          </figure>
         </div>
       </div>
       
