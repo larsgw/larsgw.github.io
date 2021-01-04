@@ -21,6 +21,17 @@
     "title": "Experience",
     "sections": [
       {
+        "title": "GSoC 2020: CDLI",
+        "img": "img/cdli.png",
+        "text": [
+          "In 2020, I did a Google Summer of Code (GSoC) project at the Cuneiform Digital Library Initiative (CDLI). There, I worked on making APIs and applying the CIDOC-CRM ontology to their data.",
+          [
+            ["GSoC project page", "https://summerofcode.withgoogle.com/archive/2020/projects/5453787629617152/"],
+            ["Blog posts", "https://cdli-gh.github.io/blog/gsoc20/api/index"]
+          ]
+        ]
+      },
+      {
         "title": "ContentMine Fellowship",
         "link": [
           "http://contentmine.org/",
@@ -97,6 +108,16 @@
             ["Demos", "https://larsgw.github.io/citation.js/"],
             ["Repository", "https://github.com/larsgw/citation.js/"],
             ["NPM", "https://npmjs.com/package/citation-js/"]
+          ]
+        ]
+      },
+      {
+        "title": "kdljs",
+        "text": [
+          "A JavaScript implementation of the <a href=\"https://kdl.dev/\">KDL</a> document language.",
+          [
+            ["Homepage", "https://kdl.dev/kdljs/0.0.2"],
+            ["Repository", "https://github.com/kdl-org/kdljs"]
           ]
         ]
       },
