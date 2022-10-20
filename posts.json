@@ -112,6 +112,22 @@
         ]
       },
       {
+        "title": "Library of Identification Resources",
+        "link": [
+          "https://identification-resources.github.io/",
+          "https://github.com/identification-resources"
+        ],
+        "img": "img/loir.png",
+        "text": [
+          "A catalog of identification resources, complete with bibliographical metadata and metadata on the type of key, the taxon/taxa it distinguishes, the geographical region it applies to, and the intended completeness.",
+          [
+            ["Data", "https://github.com/identification-resources/catalog"],
+            ["Interface", "https://identification-resources.github.io/"],
+            ["Blogpost", "https://larsgw.blogspot.com/2022/08/library-of-identification-resources.html"]
+          ]
+        ]
+      },
+      {
         "title": "kdljs",
         "text": [
           "A JavaScript implementation of the <a href=\"https://kdl.dev/\">KDL</a> document language.",
