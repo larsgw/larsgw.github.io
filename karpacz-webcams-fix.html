@@ -1,0 +1,68 @@
+<html>
+  <head>
+    <title>Livestreams</title>
+    <meta content="">
+    <script src="https://cdn.jsdelivr.net/clappr/latest/clappr.min.js"></script>
+  </head>
+  <body>
+    <div id="player"></div>
+
+    <div id="streams">
+      <section>
+        <h2>Webcams</h2>
+
+        <section>
+          <h3>Karpacz</h3>
+
+          <ul>
+            <li>
+              <button value="https://hoktastream2.webcamera.pl/karpacz_cam_ab594f/karpacz_cam_ab594f.stream/playlist.m3u8">View</button>
+              KARPACZ
+            </li>
+            <li>
+              <button value="https://hoktastream4.webcamera.pl/karpacz_cam_133512/karpacz_cam_133512.stream/playlist.m3u8">View</button>
+              KARPACZ DEPTAK
+            </li>
+            <li>
+              <button value="https://hoktastream1.webcamera.pl/karpacz_cam_96f84d/karpacz_cam_96f84d.stream/playlist.m3u8">View</button>
+              STADION IM.IRENY SZEWIŃSKIEJ (Irena Szewinska Stadium)
+            </li>
+            <li>
+              <button value="https://cam.infoo.net:4433/hls/sniezka/index.m3u8">View</button>
+              ŚNIEŻKA
+            </li>
+            <li>
+              <button value="https://cam.infoo.net:4433/hls/parafiawang/index.m3u8">View</button>
+              KOŚCIÓŁEK WANG (Wang Church)
+            </li>
+          </ul>
+        </section>
+      </section>
+    </div>
+
+    <script>
+      var player
+
+      function viewStream () {
+        if (player) player.destroy()
+
+        player = new Clappr.Player({
+          source: this.value,
+
+          parentId: '#player',
+          preload: 'auto',
+          autoPlay: 'true',
+          width: '640',
+          height: '430'
+        });
+      }
+
+      (function () {
+        const $buttons = document.querySelectorAll('#streams button')
+        for (const $button of $buttons) {
+          $button.onclick = viewStream
+        }
+      })()
+    </script>
+  </body>
+</html>
