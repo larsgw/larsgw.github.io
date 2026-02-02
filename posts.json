@@ -46,78 +46,6 @@
       }
     ]
   },
-  "programmes": {
-    "slider": true,
-    "title": "Experience",
-    "sections": [
-      {
-        "title": "GSoC 2020: CDLI",
-        "img": "img/cdli.png",
-        "text": [
-          "In 2020, I did a Google Summer of Code (GSoC) project at the Cuneiform Digital Library Initiative (CDLI). There, I worked on making APIs and applying the CIDOC-CRM ontology to their data.",
-          [
-            ["GSoC project page", "https://summerofcode.withgoogle.com/archive/2020/projects/5453787629617152/"],
-            ["Blog posts", "https://cdli-gh.github.io/blog/gsoc20/api/index"]
-          ]
-        ]
-      },
-      {
-        "title": "ContentMine Fellowship",
-        "link": [
-          "http://contentmine.org/",
-          "https://github.com/larsgw/contentmine-fellowship"
-        ],
-        "img": "img/slider_img-07.png",
-        "text": [
-          "<a href='http://contentmine.org'>ContentMine</a> is a project aiming to \"demonstrate the usefulness of content mining and to provide tools and services to others.\" I participated in the ContentMine fellowships in 2016.",
-          [
-            ["Repository", "https://github.com/larsgw/contentmine-fellowship"],
-            ["ContentMine Fellows page", "http://contentmine.org/fellows"],
-            ["Blogpost", "https://larsgw.blogspot.nl/2016/08/contentmine-fellowship.html"]
-          ],
-          {
-            "title": "Cardlists",
-            "img": "img/slider_img-08.png",
-            "text": [
-              [
-                ["Repository", "https://github.com/larsgw/ctj-cardlists"],
-                ["Demo", "https://larsgw.github.io/ctj-cardlists"]
-              ]
-            ]
-          },
-          {
-            "title": "Factvis",
-            "img": "img/slider_img-09.jpg",
-            "text": [
-              "Visualizing <a href='http://contentmine.org'>ContentMine</a> facts (port of <a href='https://github.com/tarrow'>tarrow</a>)",
-              [
-                ["Repository", "https://github.com/larsgw/factvis"],
-                ["Demo", "https://larsgw.github.io/factvis"]
-              ]
-            ]
-          }
-        ]
-      },
-      {
-        "title": "npm Community Leader",
-        "img": "img/npm.png",
-        "text": [
-          "Before the 2019 reorganization at npm I was Community Leader in their forum, <a href=\"https://npm.community/categories\">npm.community</a>. In that time, I made around 20 PRs to fix bugs in the existing codebase.",
-          [
-            ["Announcement", "https://npm.community/t/lars-willighagen-our-first-community-leader/4413"]
-          ]
-        ]
-      },
-      {
-        "title": "Technasium",
-        "pos": "50% 50%",
-        "img": "img/DSC03549.jpg",
-        "text": [
-          "<a href='http://technasium.nl'>Technasium</a> is a Dutch programme to introduce students from the age 13-18 to both technical studies and trade and industry, by facilitating students to search for projects at real-life companies, and to actually complete these projects."
-        ]
-      }
-    ]
-  },
   "projects": {
     "slider": true,
     "title": "Projects",
@@ -196,6 +124,111 @@
           [
             ["Repository", "https://github.com/larsgw/sync-fetch"]
           ]
+        ]
+      }
+    ]
+  },
+  "presentations": {
+    "title": "Presentations",
+    "text": [],
+    "sections": [
+      {
+        "title": "NEV Winterbijeenkomst 2025",
+        "img": "img/presentation-loir.png",
+        "text": [
+          "Presentation on the Library of Identification Resources.",
+          [
+            ["DOI", "https://doi.org/10.5281/zenodo.14838219"]
+          ]
+        ]
+      },
+      {
+        "title": "NEV Entomologendag 2024",
+        "img": "img/cholevinae.png",
+        "text": [
+          "Presentation on the identification of Cholevinae larvae."
+        ]
+      },
+      {
+        "title": "NLBIF-dag 2024",
+        "img": "img/presentation-loir.png",
+        "text": [
+          "Presentation on the Library of Identification Resources.",
+          [
+            ["DOI", "https://doi.org/10.5281/zenodo.10952553"]
+          ]
+        ]
+      }
+    ]
+  },
+  "programmes": {
+    "slider": true,
+    "title": "Experience",
+    "sections": [
+      {
+        "title": "GSoC 2020: CDLI",
+        "img": "img/cdli.png",
+        "text": [
+          "In 2020, I did a Google Summer of Code (GSoC) project at the Cuneiform Digital Library Initiative (CDLI). There, I worked on making APIs and applying the CIDOC-CRM ontology to their data.",
+          [
+            ["GSoC project page", "https://summerofcode.withgoogle.com/archive/2020/projects/5453787629617152/"],
+            ["Blog posts", "https://cdli-gh.github.io/blog/gsoc20/api/index"]
+          ]
+        ]
+      },
+      {
+        "title": "ContentMine Fellowship",
+        "link": [
+          "http://contentmine.org/",
+          "https://github.com/larsgw/contentmine-fellowship"
+        ],
+        "img": "img/slider_img-07.png",
+        "text": [
+          "<a href='http://contentmine.org'>ContentMine</a> is a project aiming to \"demonstrate the usefulness of content mining and to provide tools and services to others.\" I participated in the ContentMine fellowships in 2016.",
+          [
+            ["Repository", "https://github.com/larsgw/contentmine-fellowship"],
+            ["ContentMine Fellows page", "http://contentmine.org/fellows"],
+            ["Blogpost", "https://larsgw.blogspot.nl/2016/08/contentmine-fellowship.html"]
+          ],
+          {
+            "title": "Cardlists",
+            "img": "img/slider_img-08.png",
+            "text": [
+              [
+                ["Repository", "https://github.com/larsgw/ctj-cardlists"],
+                ["Demo", "https://larsgw.github.io/ctj-cardlists"]
+              ]
+            ]
+          },
+          {
+            "title": "Factvis",
+            "img": "img/slider_img-09.jpg",
+            "text": [
+              "Visualizing <a href='http://contentmine.org'>ContentMine</a> facts (port of <a href='https://github.com/tarrow'>tarrow</a>)",
+              [
+                ["Repository", "https://github.com/larsgw/factvis"],
+                ["Demo", "https://larsgw.github.io/factvis"]
+              ]
+            ]
+          }
+        ]
+      },
+      {
+        "title": "npm Community Leader",
+        "img": "img/npm.png",
+        "text": [
+          "Before the 2019 reorganization at npm I was Community Leader in their forum, <a href=\"https://npm.community/categories\">npm.community</a>. In that time, I made around 20 PRs to fix bugs in the existing codebase.",
+          [
+            ["Announcement", "https://npm.community/t/lars-willighagen-our-first-community-leader/4413"]
+          ]
+        ]
+      },
+      {
+        "title": "Technasium",
+        "pos": "50% 50%",
+        "img": "img/DSC03549.jpg",
+        "text": [
+          "<a href='http://technasium.nl'>Technasium</a> is a Dutch programme to introduce students from the age 13-18 to both technical studies and trade and industry, by facilitating students to search for projects at real-life companies, and to actually complete these projects."
         ]
       }
     ]
